@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html
+  lang="en-US"
+  xmlns:og="http://opengraphprotocol.org/schema/"
+  xmlns:fb="http://www.facebook.com/2008/fbml">
+  <head>
+    <script src="../js/services/lottie.js" type="module"></script>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="stylesheet" href="../styles/index.css" />
+    <link rel="stylesheet" href="../styles/index.desktop.css" />
+    <link rel="stylesheet" href="../styles/index.mobile.css" />
+    <link rel="stylesheet" href="../styles/index.tablet.css" />
+    <title>Coin List</title>
+    <style id="antiClickjack">
+      body {
+        display: none !important;
+      }
+    </style>
+    <script type="text/javascript">
+      if (self === top) {
+        var antiClickjack = document.getElementById("antiClickjack");
+        antiClickjack.parentNode.removeChild(antiClickjack);
+      } else {
+        top.location = self.location;
+      }
+    </script>
+    <link
+      rel="shortcut icon"
+      href="https://etzsoft.com/favicon.ico"
+      type="image/x-icon" />
+    <link
+      rel="apple-touch-icon"
+      sizes="16x16"
+      href="https://etzsoft.com/favicon-16.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="32x32"
+      href="https://etzsoft.com/favicon-32.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="48x48"
+      href="https://etzsoft.com/favicon-48.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="256x256"
+      href="https://etzsoft.com/favicon-256.png" />
+    <meta property="og:title" content="Coin List" />
+    <meta property="og:description" content="" />
+    <meta property="og:site_name" content="ETZ" />
+    <meta property="og:url" content="https://etzsoft.com/coin/index.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content="https://etzsoft.com/frame.png" />
+    <meta
+      property="og:image:secure_url"
+      content="https://etzsoft.com/frame.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:height" content="504" />
+    <meta property="og:image:width" content="968" />
+    <meta name="twitter:title" content="Coin List" />
+    <meta name="twitter:image" content="https://etzsoft.com/frame.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script src="../js/version.js" type="module"></script>
+  </head>
+  <body style="overflow: hidden">
+    <include src="components/loader/index.html"></include>
+    <canvas class="webgl" name-mobile-model></canvas>
+    <script src="../js/notification.ts" type="module"></script>
+    <include
+      src="components/header-section/index.html"
+      locals='{"title": "Coin List", "description": ""}'></include>
+    <div class="coin-list">
+      <h1>Coin List</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Coin</th>
+            <th>Price</th>
+            <th>1h</th>
+            <th>24h</th>
+            <th>7d</th>
+            <th>24h Volume</th>
+            <th>Market Cap</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <include src="components/footer/index.html" locals="{}"></include>
+    <script type="module">
+      import { getCoins } from "../js/coins.ts";
+      async function renderCoinsList() {
+        const coins = await getCoins();
+        const tableBody = document.querySelector("tbody");
+        if (!tableBody) return;
+        coins.forEach((coin, index) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+          <td>${index + 1}</td>
+          <td><a href="/coin/${coin.coin_name.toLowerCase()}">${
+            coin.coin_name
+          }</a></td>
+          <td>$${coin.currentPrice.toFixed(2)}</td>
+          <td>${coin.priceChange1h ? `${coin.priceChange1h}%` : "N/A"}</td>
+          <td>${coin.priceChange24h}%</td>
+          <td>${coin.priceChange7d}%</td>
+          <td>$${coin.volume.toLocaleString()}</td>
+          <td>$${coin.marketCap.toLocaleString()}</td>
+        `;
+          tableBody.appendChild(row);
+        });
+      }
+      document.addEventListener("DOMContentLoaded", () => {
+        renderCoinsList();
+      });
+    </script>
+    <script type="module">
+      function setupSizePage() {
+        const vw = Math.max(
+          document.documentElement.clientWidth || 0,
+          window.innerWidth || 0
+        );
+        const vh = Math.max(
+          document.documentElement.clientHeight || 0,
+          window.innerHeight || 0
+        );
+        document.documentElement.style.setProperty("--vw", `${vw}`);
+        document.documentElement.style.setProperty("--vh", `${vh}`);
+        document.documentElement.style.setProperty("--vh-px", `${vh}px`);
+      }
+      setupSizePage();
+      window.addEventListener("resize", setupSizePage);
+    </script>
+    <script type="module" src="../js/links/links.ts" async></script>
+    <script type="module" src="../js/header-menu.ts" async></script>
+    <script type="module" src="../js/index.ts"></script>
+    <script type="module" src="../js/three.js"></script>
+  </body>
+</html>

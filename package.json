@@ -3,7 +3,7 @@
   "version": "v1.1.21",
   "private": true,
   "scripts": {
-    "dev": "parcel serve  --open --host localhost --port 5140",
+    "dev": "node load-env.js && parcel serve  --open --host localhost --port 5140",
     "build": "rimraf build && parcel build --dist-dir build",
     "prepare": "husky install",
     "check:tsc": "tsc --noemit -t es5 ./src/**/*.ts",
@@ -27,7 +27,8 @@
     "src/pages/employers.html",
     "src/pages/legal.html",
     "src/pages/.well-known/change-password.html",
-    "src/pages/coin/index.js"
+    "src/pages/assets.html",
+    "src/pages/[coin].html"
   ],
   "devDependencies": {
     "@alienlebarge/stylelint-config": "^3.1.6",
