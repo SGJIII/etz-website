@@ -1,6 +1,8 @@
 import axios from "axios";
 import { supabase } from "../lib/supabase";
 
+const corsProxy = "https://cors-anywhere.herokuapp.com/";
+
 interface Coin {
   id: number;
   coin_name: string;
@@ -22,7 +24,7 @@ export async function getCoins(): Promise<Coin[]> {
     coins.map(async (coin: Coin) => {
       try {
         const response = await axios.get(
-          `https://api.coingecko.com/api/v3/coins/${coin.coin_name.toLowerCase()}/market_chart`,
+          `${corsProxy}https://api.coingecko.com/api/v3/coins/${coin.coin_name.toLowerCase()}/market_chart`,
           {
             params: {
               vs_currency: "usd",
