@@ -26,7 +26,8 @@
     "src/pages/index.html",
     "src/pages/employers.html",
     "src/pages/legal.html",
-    "src/pages/.well-known/change-password.html"
+    "src/pages/.well-known/change-password.html",
+    "src/pages/coin/index.js"
   ],
   "devDependencies": {
     "@alienlebarge/stylelint-config": "^3.1.6",
@@ -54,8 +55,15 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.43.4",
     "axios": "^0.27.2",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.4.5",
+    "https-proxy-agent": "^5.0.1",
     "lil-gui": "^0.16.1",
+    "openai": "^4.49.1",
+    "proxy-agent": "^6.4.0",
+    "puppeteer": "^22.10.0",
     "smoothscroll-polyfill": "^0.4.4",
     "three": "^0.140.2",
     "universalsmoothscroll": "^5.1.2",

@@ -1,0 +1,48 @@
+@import "../styles/index.css";
+@import "../styles/index.desktop.css";
+@import "../styles/index.mobile.css";
+@import "../styles/index.tablet.css";
+
+.coin-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+}
+
+.coin-list h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.coin-list table {
+  width: 100%;
+  max-width: 1200px;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.coin-list table th,
+.coin-list table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.coin-list table th {
+  background-color: #f2f2f2;
+}
+
+.coin-list table td {
+  text-align: center;
+}
+
+.coin-list a {
+  text-decoration: none;
+  color: #0070f3;
+  transition: color 0.3s;
+}
+
+.coin-list a:hover {
+  color: #005bb5;
+}
