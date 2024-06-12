@@ -64,7 +64,26 @@
     <meta name="twitter:title" content="Coin List" />
     <meta name="twitter:image" content="https://etzsoft.com/frame.png" />
     <meta name="twitter:card" content="summary_large_image" />
+
     <script src="../js/version.js" type="module"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script type="module">
+      if (process.env.BUILD_STATUS === "PRODUCTION") {
+        var script = document.createElement("script");
+        script.async = true;
+        script.src = "https://www.googletagmanager.com/gtag/js?id=G-JNSD1B12W2";
+
+        script.onload = function () {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag("js", new Date());
+          gtag("config", "G-JNSD1B12W2");
+        };
+        document.head.appendChild(script);
+      }
+    </script>
   </head>
   <body style="overflow: hidden">
     <div id="loader-container">
@@ -83,9 +102,9 @@
             <th>#</th>
             <th>Coin</th>
             <th>Price</th>
-            <th>1h</th>
-            <th>24h</th>
+            <th>1d</th>
             <th>7d</th>
+            <th>30d</th>
             <th>24h Volume</th>
             <th>Market Cap</th>
           </tr>
@@ -97,37 +116,14 @@
     <script type="module">
       import { getCoins } from "../js/coins.ts";
 
-      async function renderCoinsList() {
-        const coins = await getCoins();
-        console.log("Coins received for rendering:", coins);
-        const tableBody = document.querySelector("tbody");
-        if (!tableBody) return;
-        coins.forEach((coin, index) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-          <td>${index + 1}</td>
-          <td><a href="/coin/${coin.coin_name.toLowerCase()}">${
-            coin.coin_name
-          }</a></td>
-          <td>$${coin.currentPrice?.toFixed(2) || "N/A"}</td>
-          <td>${coin.priceChange1h ? `${coin.priceChange1h}%` : "N/A"}</td>
-          <td>${coin.priceChange24h || "N/A"}%</td>
-          <td>${coin.priceChange7d || "N/A"}%</td>
-          <td>$${coin.volume?.toLocaleString() || "N/A"}</td>
-          <td>$${coin.marketCap?.toLocaleString() || "N/A"}</td>
-        `;
-          tableBody.appendChild(row);
-        });
-      }
-
       document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
           const loaderContainer = document.getElementById("loader-container");
           if (loaderContainer) {
             loaderContainer.style.display = "none";
           }
-          renderCoinsList();
-        }, 3000); // Hide loader after 3 seconds and then render coins list
+          getCoins(); // Start fetching and displaying coins immediately
+        }, 3000); // Hide loader after 3 seconds and then start fetching coins
       });
     </script>
     <script type="module">

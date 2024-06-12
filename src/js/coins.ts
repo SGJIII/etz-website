@@ -1,17 +1,16 @@
 import axios from "axios";
 import { supabase } from "../lib/supabase";
 
-const corsProxy =
-  process.env.REACT_APP_CORS_PROXY ||
-  "https://etz-cors-proxy-5f06163e7508.herokuapp.com/";
+const corsProxy = process.env.REACT_APP_CORS_PROXY;
 
 interface Coin {
   id: number;
   coingecko_id: string;
   coin_name: string;
   currentPrice?: number;
-  priceChange24h?: string;
+  priceChange1d?: string;
   priceChange7d?: string;
+  priceChange30d?: string;
   volume?: number;
   marketCap?: number;
 }
@@ -52,7 +51,10 @@ function addToQueue(task: () => Promise<void>) {
 }
 
 // Function to fetch coin data
-async function fetchCoinData(coin: Coin, enhancedCoins: Coin[]): Promise<void> {
+async function fetchCoinData(
+  coin: Coin,
+  tableBody: HTMLElement
+): Promise<void> {
   console.log(`Fetching data for coin: ${coin.coingecko_id}`);
   try {
     const response = await axios.get(
@@ -67,24 +69,39 @@ async function fetchCoinData(coin: Coin, enhancedCoins: Coin[]): Promise<void> {
     console.log(`Received data for coin: ${coin.coingecko_id}`);
     const prices = response.data.prices;
     const currentPrice = prices[prices.length - 1][1];
-    const price24hAgo = prices[prices.length - 24][1];
+    const price1dAgo = prices[prices.length - 24][1];
     const price7dAgo = prices[prices.length - 24 * 7][1];
-    const priceChange24h = ((currentPrice - price24hAgo) / price24hAgo) * 100;
+    const price30dAgo = prices[0][1]; // Assuming the first entry is 30 days ago
+    const priceChange1d = ((currentPrice - price1dAgo) / price1dAgo) * 100;
     const priceChange7d = ((currentPrice - price7dAgo) / price7dAgo) * 100;
+    const priceChange30d = ((currentPrice - price30dAgo) / price30dAgo) * 100;
 
     const enhancedCoin: Coin = {
       ...coin,
       currentPrice,
-      priceChange24h: priceChange24h.toFixed(2),
+      priceChange1d: priceChange1d.toFixed(2),
       priceChange7d: priceChange7d.toFixed(2),
+      priceChange30d: priceChange30d.toFixed(2),
       volume:
         response.data.total_volumes[response.data.total_volumes.length - 1][1],
       marketCap:
         response.data.market_caps[response.data.market_caps.length - 1][1],
     };
 
-    enhancedCoins.push(enhancedCoin);
-    console.log(`Processed coin: ${coin.coingecko_id}`);
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${enhancedCoin.id}</td>
+      <td><a href="/coin/${enhancedCoin.coin_name.toLowerCase()}">${
+      enhancedCoin.coin_name
+    }</a></td>
+      <td>$${enhancedCoin.currentPrice?.toFixed(2) || "N/A"}</td>
+      <td>${enhancedCoin.priceChange1d || "N/A"}%</td>
+      <td>${enhancedCoin.priceChange7d || "N/A"}%</td>
+      <td>${enhancedCoin.priceChange30d || "N/A"}%</td>
+      <td>$${enhancedCoin.volume?.toLocaleString() || "N/A"}</td>
+      <td>$${enhancedCoin.marketCap?.toLocaleString() || "N/A"}</td>
+    `;
+    tableBody.appendChild(row);
   } catch (error) {
     console.error(
       `Error fetching CoinGecko data for ${coin.coingecko_id}:`,
@@ -94,20 +111,21 @@ async function fetchCoinData(coin: Coin, enhancedCoins: Coin[]): Promise<void> {
 }
 
 // Function to get coins and process them in chunks
-export async function getCoins(): Promise<Coin[]> {
+export async function getCoins(): Promise<void> {
   console.log("Fetching coins from Supabase...");
   const { data: coins, error } = await supabase.from("coins").select("*");
   if (error) {
     console.error("Error fetching coins from Supabase:", error);
-    return [];
+    return;
   }
   console.log(`Fetched ${coins.length} coins from Supabase.`);
 
-  const enhancedCoins: Coin[] = [];
+  const tableBody = document.querySelector("tbody");
+  if (!tableBody) return;
 
   // Adding tasks to the queue and ensuring each coin is processed only once
   coins.forEach((coin) => {
-    addToQueue(() => fetchCoinData(coin, enhancedCoins));
+    addToQueue(() => fetchCoinData(coin, tableBody));
   });
 
   // Wait until all tasks are processed
@@ -116,6 +134,4 @@ export async function getCoins(): Promise<Coin[]> {
   }
 
   console.log("All coins have been processed.");
-  console.log("Enhanced coins:", enhancedCoins);
-  return enhancedCoins;
 }
