@@ -13,3 +13,6 @@ envFiles.forEach(file => {
     console.error(`Environment file ${envPath} not found.`);
   }
 });
+
+// Log loaded environment variables for debugging
+console.log('Loaded environment variables:', process.env);

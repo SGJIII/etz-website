@@ -1,7 +1,7 @@
 import { supabase } from "../lib/supabase";
 import axios from "axios";
 
-const corsProxy = "https://cors-anywhere.herokuapp.com/";
+const corsProxy = process.env.REACT_APP_CORS_PROXY;
 
 interface Coin {
   coin_name: string;
