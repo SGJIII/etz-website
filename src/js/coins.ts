@@ -7,11 +7,11 @@ interface Coin {
   id: number;
   coingecko_id: string;
   coin_name: string;
-  currentPrice: number;
-  priceChange24h: string;
-  priceChange7d: string;
-  volume: number;
-  marketCap: number;
+  currentPrice?: number;
+  priceChange24h?: string;
+  priceChange7d?: string;
+  volume?: number;
+  marketCap?: number;
 }
 
 // Queue to manage requests
@@ -102,6 +102,7 @@ export async function getCoins(): Promise<Coin[]> {
     addToQueue(async () => {
       const enhancedCoin = await fetchCoinData(coin);
       enhancedCoins.push(enhancedCoin);
+      console.log(`Processed coin: ${coin.coingecko_id}`);
     });
   }
 
