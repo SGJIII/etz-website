@@ -15,6 +15,11 @@
   margin-bottom: 20px;
 }
 
+.table-container {
+  max-height: 70vh; /* Adjust based on your needs */
+  overflow-y: auto;
+}
+
 .coin-list table {
   width: 100%;
   max-width: 1200px;
