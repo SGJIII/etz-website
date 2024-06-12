@@ -47,6 +47,7 @@ function addToQueue(task: () => Promise<any>) {
 
 // Function to fetch coin data
 async function fetchCoinData(coin: Coin): Promise<Coin> {
+  console.log(`Fetching data for coin: ${coin.coingecko_id}`);
   try {
     const response = await axios.get(
       `${corsProxy}https://api.coingecko.com/api/v3/coins/${coin.coingecko_id}/market_chart`,
@@ -57,6 +58,7 @@ async function fetchCoinData(coin: Coin): Promise<Coin> {
         },
       }
     );
+    console.log(`Received data for coin: ${coin.coingecko_id}`);
     const prices = response.data.prices;
     const currentPrice = prices[prices.length - 1][1];
     const price24hAgo = prices[prices.length - 24][1];
@@ -85,11 +87,13 @@ async function fetchCoinData(coin: Coin): Promise<Coin> {
 
 // Function to get coins and process them in chunks
 export async function getCoins(): Promise<Coin[]> {
+  console.log("Fetching coins from Supabase...");
   const { data: coins, error } = await supabase.from("coins").select("*");
   if (error) {
     console.error("Error fetching coins from Supabase:", error);
     return [];
   }
+  console.log(`Fetched ${coins.length} coins from Supabase.`);
 
   const enhancedCoins: Coin[] = [];
 
@@ -105,5 +109,6 @@ export async function getCoins(): Promise<Coin[]> {
     await delay(1000);
   }
 
+  console.log("All coins have been processed.");
   return enhancedCoins;
 }
