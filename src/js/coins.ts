@@ -25,6 +25,10 @@ axiosRetry(axios, {
   },
 });
 
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function getCoins(): Promise<Coin[]> {
   const { data: coins, error } = await supabase.from("coins").select("*");
   if (error) {
@@ -32,8 +36,7 @@ export async function getCoins(): Promise<Coin[]> {
     return [];
   }
 
-  // Fetch coins in chunks to avoid hitting the rate limit
-  const chunkSize = 10;
+  const chunkSize = 30; // Number of requests per batch
   const enhancedCoins: Coin[] = [];
 
   for (let i = 0; i < coins.length; i += chunkSize) {
@@ -83,6 +86,12 @@ export async function getCoins(): Promise<Coin[]> {
       })
     );
     enhancedCoins.push(...enhancedChunk);
+
+    // Introduce a delay between batches
+    if (i + chunkSize < coins.length) {
+      console.log("Waiting for 1 minute to avoid rate limit...");
+      await delay(60000); // Wait for 1 minute
+    }
   }
 
   return enhancedCoins;
