@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="../styles/index.mobile.css" />
     <link rel="stylesheet" href="../styles/index.tablet.css" />
     <link rel="stylesheet" href="../styles/coins.css" />
-    <!-- Added coins.css -->
+    <!-- Add this line to include coins.css -->
     <title>Coin List</title>
     <style id="antiClickjack">
       body {
@@ -67,6 +67,24 @@
     <meta name="twitter:image" content="https://etzsoft.com/frame.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <script src="../js/version.js" type="module"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script type="module">
+      if (process.env.BUILD_STATUS === "PRODUCTION") {
+        var script = document.createElement("script");
+        script.async = true;
+        script.src = "https://www.googletagmanager.com/gtag/js?id=G-JNSD1B12W2";
+
+        script.onload = function () {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag("js", new Date());
+          gtag("config", "G-JNSD1B12W2");
+        };
+        document.head.appendChild(script);
+      }
+    </script>
   </head>
   <body style="overflow: hidden">
     <div id="loader-container">
@@ -114,7 +132,7 @@
             coin.coin_name
           }</a></td>
             <td>$${coin.currentPrice?.toFixed(2) || "N/A"}</td>
-            <td>${coin.priceChange24h || "N/A"}%</td>
+            <td>${coin.priceChange1d || "N/A"}%</td>
             <td>${coin.priceChange7d || "N/A"}%</td>
             <td>${coin.priceChange30d || "N/A"}%</td>
             <td>$${coin.volume?.toLocaleString() || "N/A"}</td>
