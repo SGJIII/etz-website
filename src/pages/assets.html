@@ -94,27 +94,36 @@
     <include src="components/footer/index.html" locals="{}"></include>
     <script type="module">
       import { getCoins } from "../js/coins.ts";
+
       async function renderCoinsList() {
         const coins = await getCoins();
         const tableBody = document.querySelector("tbody");
         if (!tableBody) return;
+
+        tableBody.innerHTML = ""; // Clear existing rows before rendering
+
         coins.forEach((coin, index) => {
           const row = document.createElement("tr");
           row.innerHTML = `
-          <td>${index + 1}</td>
-          <td><a href="/coin/${coin.coin_name.toLowerCase()}">${
+            <td>${index + 1}</td>
+            <td><a href="/coin/${coin.coin_name.toLowerCase()}">${
             coin.coin_name
           }</a></td>
-          <td>$${coin.currentPrice.toFixed(2)}</td>
-          <td>${coin.priceChange1h ? `${coin.priceChange1h}%` : "N/A"}</td>
-          <td>${coin.priceChange24h}%</td>
-          <td>${coin.priceChange7d}%</td>
-          <td>$${coin.volume.toLocaleString()}</td>
-          <td>$${coin.marketCap.toLocaleString()}</td>
-        `;
+            <td>$${
+              coin.currentPrice ? coin.currentPrice.toFixed(2) : "N/A"
+            }</td>
+            <td>${coin.priceChange1h ? `${coin.priceChange1h}%` : "N/A"}</td>
+            <td>${coin.priceChange24h ? `${coin.priceChange24h}%` : "N/A"}</td>
+            <td>${coin.priceChange7d ? `${coin.priceChange7d}%` : "N/A"}</td>
+            <td>$${coin.volume ? coin.volume.toLocaleString() : "N/A"}</td>
+            <td>$${
+              coin.marketCap ? coin.marketCap.toLocaleString() : "N/A"
+            }</td>
+          `;
           tableBody.appendChild(row);
         });
       }
+
       document.addEventListener("DOMContentLoaded", () => {
         renderCoinsList();
       });
