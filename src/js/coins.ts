@@ -14,33 +14,38 @@ interface Coin {
   marketCap: number;
 }
 
-const queue: (() => Promise<any>)[] = [];
+// Queue to manage requests
+const requestQueue: (() => Promise<any>)[] = [];
 let isProcessingQueue = false;
 
+// Utility function to introduce delay
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// Function to process the request queue
 async function processQueue() {
   if (isProcessingQueue) return;
   isProcessingQueue = true;
 
-  while (queue.length > 0) {
-    const task = queue.shift();
+  while (requestQueue.length > 0) {
+    const task = requestQueue.shift();
     if (task) {
       await task();
-      await delay(2000); // Adjust the delay as needed
+      await delay(2000); // Adjust the delay to ensure we stay within rate limits
     }
   }
 
   isProcessingQueue = false;
 }
 
+// Function to add tasks to the queue
 function addToQueue(task: () => Promise<any>) {
-  queue.push(task);
+  requestQueue.push(task);
   processQueue();
 }
 
+// Function to fetch coin data
 async function fetchCoinData(coin: Coin): Promise<Coin> {
   try {
     const response = await axios.get(
@@ -78,6 +83,7 @@ async function fetchCoinData(coin: Coin): Promise<Coin> {
   }
 }
 
+// Function to get coins and process them in chunks
 export async function getCoins(): Promise<Coin[]> {
   const { data: coins, error } = await supabase.from("coins").select("*");
   if (error) {
@@ -95,7 +101,7 @@ export async function getCoins(): Promise<Coin[]> {
   }
 
   // Wait until all tasks are processed
-  while (isProcessingQueue || queue.length > 0) {
+  while (isProcessingQueue || requestQueue.length > 0) {
     await delay(1000);
   }
 
