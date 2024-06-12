@@ -15,7 +15,7 @@ interface Coin {
 }
 
 // Queue to manage requests
-const requestQueue: (() => Promise<any>)[] = [];
+const requestQueue: Set<() => Promise<any>> = new Set();
 let isProcessingQueue = false;
 
 // Utility function to introduce delay
@@ -28,9 +28,10 @@ async function processQueue() {
   if (isProcessingQueue) return;
   isProcessingQueue = true;
 
-  while (requestQueue.length > 0) {
-    const task = requestQueue.shift();
+  while (requestQueue.size > 0) {
+    const task = requestQueue.values().next().value;
     if (task) {
+      requestQueue.delete(task);
       await task();
       await delay(2000); // Adjust the delay to ensure we stay within rate limits
     }
@@ -41,7 +42,7 @@ async function processQueue() {
 
 // Function to add tasks to the queue
 function addToQueue(task: () => Promise<any>) {
-  requestQueue.push(task);
+  requestQueue.add(task);
   processQueue();
 }
 
@@ -105,7 +106,7 @@ export async function getCoins(): Promise<Coin[]> {
   }
 
   // Wait until all tasks are processed
-  while (isProcessingQueue || requestQueue.length > 0) {
+  while (isProcessingQueue || requestQueue.size > 0) {
     await delay(1000);
   }
 
