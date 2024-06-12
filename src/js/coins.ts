@@ -1,5 +1,4 @@
 import axios from "axios";
-import axiosRetry from "axios-retry";
 import { supabase } from "../lib/supabase";
 
 const corsProxy = process.env.REACT_APP_CORS_PROXY;
@@ -15,18 +14,31 @@ interface Coin {
   marketCap: number;
 }
 
-axiosRetry(axios, {
-  retries: 1, // Limit retries to 1
-  retryDelay: (retryCount) => {
-    return retryCount * 1000;
-  },
-  retryCondition: (error) => {
-    return error.response ? error.response.status === 429 : false;
-  },
-});
+const queue: (() => Promise<any>)[] = [];
+let isProcessingQueue = false;
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function processQueue() {
+  if (isProcessingQueue) return;
+  isProcessingQueue = true;
+
+  while (queue.length > 0) {
+    const task = queue.shift();
+    if (task) {
+      await task();
+      await delay(2000); // Adjust the delay as needed
+    }
+  }
+
+  isProcessingQueue = false;
+}
+
+function addToQueue(task: () => Promise<any>) {
+  queue.push(task);
+  processQueue();
 }
 
 async function fetchCoinData(coin: Coin): Promise<Coin> {
@@ -73,19 +85,18 @@ export async function getCoins(): Promise<Coin[]> {
     return [];
   }
 
-  const chunkSize = 30; // Number of requests per batch
   const enhancedCoins: Coin[] = [];
 
-  for (let i = 0; i < coins.length; i += chunkSize) {
-    const chunk = coins.slice(i, i + chunkSize);
-    const enhancedChunk = await Promise.all(chunk.map(fetchCoinData));
-    enhancedCoins.push(...enhancedChunk);
+  for (const coin of coins) {
+    addToQueue(async () => {
+      const enhancedCoin = await fetchCoinData(coin);
+      enhancedCoins.push(enhancedCoin);
+    });
+  }
 
-    // Introduce a delay between batches
-    if (i + chunkSize < coins.length) {
-      console.log("Waiting for 1 minute to avoid rate limit...");
-      await delay(60000); // Wait for 1 minute
-    }
+  // Wait until all tasks are processed
+  while (isProcessingQueue || queue.length > 0) {
+    await delay(1000);
   }
 
   return enhancedCoins;
