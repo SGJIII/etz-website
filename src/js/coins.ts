@@ -44,7 +44,9 @@ async function processQueue() {
 // Function to add tasks to the queue
 function addToQueue(task: () => Promise<void>) {
   requestQueue.add(task);
-  processQueue();
+  if (!isProcessingQueue) {
+    processQueue();
+  }
 }
 
 // Function to fetch coin data
@@ -100,9 +102,10 @@ export async function getCoins(): Promise<Coin[]> {
 
   const enhancedCoins: Coin[] = [];
 
-  for (const coin of coins) {
+  // Adding tasks to the queue and ensuring each coin is processed only once
+  coins.forEach((coin) => {
     addToQueue(() => fetchCoinData(coin, enhancedCoins));
-  }
+  });
 
   // Wait until all tasks are processed
   while (isProcessingQueue || requestQueue.size > 0) {
