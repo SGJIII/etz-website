@@ -47,7 +47,7 @@ function addToQueue(task: () => Promise<any>) {
 }
 
 // Function to fetch coin data
-async function fetchCoinData(coin: Coin): Promise<Coin> {
+async function fetchCoinData(coin: Coin, enhancedCoins: Coin[]): Promise<void> {
   console.log(`Fetching data for coin: ${coin.coingecko_id}`);
   try {
     const response = await axios.get(
@@ -67,7 +67,7 @@ async function fetchCoinData(coin: Coin): Promise<Coin> {
     const priceChange24h = ((currentPrice - price24hAgo) / price24hAgo) * 100;
     const priceChange7d = ((currentPrice - price7dAgo) / price7dAgo) * 100;
 
-    return {
+    const enhancedCoin: Coin = {
       ...coin,
       currentPrice,
       priceChange24h: priceChange24h.toFixed(2),
@@ -77,12 +77,13 @@ async function fetchCoinData(coin: Coin): Promise<Coin> {
       marketCap:
         response.data.market_caps[response.data.market_caps.length - 1][1],
     };
+
+    enhancedCoins.push(enhancedCoin);
   } catch (error) {
     console.error(
       `Error fetching CoinGecko data for ${coin.coingecko_id}:`,
       error
     );
-    return coin;
   }
 }
 
@@ -99,11 +100,7 @@ export async function getCoins(): Promise<Coin[]> {
   const enhancedCoins: Coin[] = [];
 
   for (const coin of coins) {
-    addToQueue(async () => {
-      const enhancedCoin = await fetchCoinData(coin);
-      enhancedCoins.push(enhancedCoin);
-      console.log(`Processed coin: ${coin.coingecko_id}`);
-    });
+    addToQueue(() => fetchCoinData(coin, enhancedCoins));
   }
 
   // Wait until all tasks are processed
