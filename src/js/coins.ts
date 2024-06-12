@@ -1,7 +1,9 @@
 import axios from "axios";
 import { supabase } from "../lib/supabase";
 
-const corsProxy = process.env.REACT_APP_CORS_PROXY;
+const corsProxy =
+  process.env.REACT_APP_CORS_PROXY ||
+  "https://etz-cors-proxy-5f06163e7508.herokuapp.com/";
 
 interface Coin {
   id: number;
@@ -82,6 +84,7 @@ async function fetchCoinData(coin: Coin, enhancedCoins: Coin[]): Promise<void> {
     };
 
     enhancedCoins.push(enhancedCoin);
+    console.log(`Processed coin: ${coin.coingecko_id}`);
   } catch (error) {
     console.error(
       `Error fetching CoinGecko data for ${coin.coingecko_id}:`,
@@ -113,5 +116,6 @@ export async function getCoins(): Promise<Coin[]> {
   }
 
   console.log("All coins have been processed.");
+  console.log("Enhanced coins:", enhancedCoins);
   return enhancedCoins;
 }

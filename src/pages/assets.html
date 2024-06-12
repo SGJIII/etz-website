@@ -99,6 +99,7 @@
 
       async function renderCoinsList() {
         const coins = await getCoins();
+        console.log("Coins received for rendering:", coins);
         const tableBody = document.querySelector("tbody");
         if (!tableBody) return;
         coins.forEach((coin, index) => {
