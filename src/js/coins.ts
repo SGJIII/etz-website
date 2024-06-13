@@ -53,8 +53,8 @@ function addToQueue(task: () => Promise<void>) {
 // Function to fetch coin data with exponential backoff
 async function fetchCoinData(
   coin: Coin,
-  enhancedCoins: Coin[],
-  retries = 3,
+  tableBody: HTMLElement,
+  retries = 5,
   backoff = 1000
 ): Promise<void> {
   console.log(`Fetching data for coin: ${coin.coingecko_id}`);
@@ -73,7 +73,7 @@ async function fetchCoinData(
     const currentPrice = prices[prices.length - 1][1];
     const price1dAgo = prices[prices.length - 24][1];
     const price7dAgo = prices[prices.length - 24 * 7][1];
-    const price30dAgo = prices[prices.length - 24 * 30][1];
+    const price30dAgo = prices[0][1]; // Assuming the first entry is 30 days ago
     const priceChange1d = ((currentPrice - price1dAgo) / price1dAgo) * 100;
     const priceChange7d = ((currentPrice - price7dAgo) / price7dAgo) * 100;
     const priceChange30d = ((currentPrice - price30dAgo) / price30dAgo) * 100;
@@ -90,14 +90,26 @@ async function fetchCoinData(
         response.data.market_caps[response.data.market_caps.length - 1][1],
     };
 
-    enhancedCoins.push(enhancedCoin);
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td><a href="/coin/${enhancedCoin.coin_name.toLowerCase()}">${
+      enhancedCoin.coin_name
+    }</a></td>
+      <td>$${enhancedCoin.currentPrice?.toFixed(2) || "N/A"}</td>
+      <td>${enhancedCoin.priceChange1d || "N/A"}%</td>
+      <td>${enhancedCoin.priceChange7d || "N/A"}%</td>
+      <td>${enhancedCoin.priceChange30d || "N/A"}%</td>
+      <td>$${enhancedCoin.volume?.toLocaleString() || "N/A"}</td>
+      <td>$${enhancedCoin.marketCap?.toLocaleString() || "N/A"}</td>
+    `;
+    tableBody.appendChild(row);
   } catch (error: any) {
     if (error.response && error.response.status === 429 && retries > 0) {
       console.warn(
         `Rate limited. Retrying ${coin.coingecko_id} in ${backoff}ms...`
       );
       await delay(backoff);
-      return fetchCoinData(coin, enhancedCoins, retries - 1, backoff * 2);
+      return fetchCoinData(coin, tableBody, retries - 1, backoff * 2);
     } else {
       console.error(
         `Error fetching CoinGecko data for ${coin.coingecko_id}:`,
@@ -108,20 +120,21 @@ async function fetchCoinData(
 }
 
 // Function to get coins and process them in chunks
-export async function getCoins(): Promise<Coin[]> {
+export async function getCoins(): Promise<void> {
   console.log("Fetching coins from Supabase...");
   const { data: coins, error } = await supabase.from("coins").select("*");
   if (error) {
     console.error("Error fetching coins from Supabase:", error);
-    return [];
+    return;
   }
   console.log(`Fetched ${coins.length} coins from Supabase.`);
 
-  const enhancedCoins: Coin[] = [];
+  const tableBody = document.querySelector("tbody");
+  if (!tableBody) return;
 
   // Adding tasks to the queue and ensuring each coin is processed only once
   coins.forEach((coin) => {
-    addToQueue(() => fetchCoinData(coin, enhancedCoins));
+    addToQueue(() => fetchCoinData(coin, tableBody));
   });
 
   // Wait until all tasks are processed
@@ -130,5 +143,4 @@ export async function getCoins(): Promise<Coin[]> {
   }
 
   console.log("All coins have been processed.");
-  return enhancedCoins;
 }
