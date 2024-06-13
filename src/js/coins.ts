@@ -91,13 +91,8 @@ async function fetchCoinData(
     };
 
     enhancedCoins.push(enhancedCoin);
-  } catch (error) {
-    if (
-      axios.isAxiosError(error) &&
-      error.response &&
-      error.response.status === 429 &&
-      retries > 0
-    ) {
+  } catch (error: any) {
+    if (error.response && error.response.status === 429 && retries > 0) {
       console.warn(
         `Rate limited. Retrying ${coin.coingecko_id} in ${backoff}ms...`
       );
