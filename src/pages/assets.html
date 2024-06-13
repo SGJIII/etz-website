@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="../styles/index.mobile.css" />
     <link rel="stylesheet" href="../styles/index.tablet.css" />
     <link rel="stylesheet" href="../styles/coins.css" />
-    <!-- Include coins.css -->
     <title>Coin List</title>
     <style id="antiClickjack">
       body {
@@ -105,7 +104,6 @@
           <table>
             <thead>
               <tr>
-                <th>#</th>
                 <th>Coin</th>
                 <th>Price</th>
                 <th>1d</th>
@@ -129,20 +127,19 @@
         console.log("Coins received for rendering:", coins);
         const tableBody = document.querySelector("tbody");
         if (!tableBody) return;
-        coins.forEach((coin, index) => {
+        coins.forEach((coin) => {
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td>${index + 1}</td>
-            <td><a href="/coin/${coin.coin_name.toLowerCase()}">${
+                    <td><a href="/coin/${coin.coin_name.toLowerCase()}">${
             coin.coin_name
           }</a></td>
-            <td>$${coin.currentPrice?.toFixed(2) || "N/A"}</td>
-            <td>${coin.priceChange1d || "N/A"}%</td>
-            <td>${coin.priceChange7d || "N/A"}%</td>
-            <td>${coin.priceChange30d || "N/A"}%</td>
-            <td>$${coin.volume?.toLocaleString() || "N/A"}</td>
-            <td>$${coin.marketCap?.toLocaleString() || "N/A"}</td>
-          `;
+                    <td>$${coin.currentPrice?.toFixed(2) || "N/A"}</td>
+                    <td>${coin.priceChange1d || "N/A"}%</td>
+                    <td>${coin.priceChange7d || "N/A"}%</td>
+                    <td>${coin.priceChange30d || "N/A"}%</td>
+                    <td>$${coin.volume?.toLocaleString() || "N/A"}</td>
+                    <td>$${coin.marketCap?.toLocaleString() || "N/A"}</td>
+                `;
           tableBody.appendChild(row);
         });
       }
