@@ -60,12 +60,17 @@ async function fetchCoinData(
   console.log(`Fetching data for coin: ${coin.coin_name}`);
   try {
     const response = await axios.get(
-      `${corsProxy}https://api.coinbase.com/v2/prices/${coin.coin_name}-USD/spot`
+      `${corsProxy}https://api.exchange.coinbase.com/products/${coin.coin_name}-USD/candles`,
+      {
+        params: {
+          granularity: 86400, // 1 day
+        },
+      }
     );
-    const data = response.data.data;
-    const currentPrice = parseFloat(data.amount);
+    const data = response.data;
+    const currentPrice = data[0][4]; // Closing price
 
-    // Fetch logo URL
+    // Fetch logo URL (Assuming an endpoint exists for logos)
     const logoResponse = await axios.get(
       `${corsProxy}https://api.coinbase.com/v2/assets/icons/${coin.coin_name.toLowerCase()}`
     );
@@ -99,7 +104,9 @@ async function fetchCoinData(
     `;
     tableBody.appendChild(row);
   } catch (error: any) {
-    if (error.response && error.response.status === 429 && retries > 0) {
+    if (error.response && error.response.status === 404) {
+      console.error(`Coin not found on Coinbase: ${coin.coin_name}`);
+    } else if (error.response && error.response.status === 429 && retries > 0) {
       console.warn(
         `Rate limited. Retrying ${coin.coin_name} in ${backoff}ms...`
       );
