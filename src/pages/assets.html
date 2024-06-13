@@ -14,8 +14,6 @@
     <link rel="stylesheet" href="../styles/index.desktop.css" />
     <link rel="stylesheet" href="../styles/index.mobile.css" />
     <link rel="stylesheet" href="../styles/index.tablet.css" />
-    <link rel="stylesheet" href="../styles/coins.css" />
-    <!-- Add this line to include coins.css -->
     <title>Coin List</title>
     <style id="antiClickjack">
       body {
@@ -73,7 +71,6 @@
         var script = document.createElement("script");
         script.async = true;
         script.src = "https://www.googletagmanager.com/gtag/js?id=G-JNSD1B12W2";
-
         script.onload = function () {
           window.dataLayer = window.dataLayer || [];
           function gtag() {
@@ -86,7 +83,7 @@
       }
     </script>
   </head>
-  <body style="overflow: hidden">
+  <body>
     <div id="loader-container">
       <include src="components/loader/index.html"></include>
     </div>
@@ -95,26 +92,31 @@
     <include
       src="components/header-section/index.html"
       locals='{"title": "Coin List", "description": ""}'></include>
-    <div class="coin-list">
-      <h1>Coin List</h1>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Coin</th>
-              <th>Price</th>
-              <th>1d</th>
-              <th>7d</th>
-              <th>30d</th>
-              <th>24h Volume</th>
-              <th>Market Cap</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+    <article
+      id="content"
+      class="__section __sidePadding ContentSection"
+      style="height: auto">
+      <div class="coin-list">
+        <h1>Coin List</h1>
+        <div class="table-container" style="overflow-y: auto">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Coin</th>
+                <th>Price</th>
+                <th>1d</th>
+                <th>7d</th>
+                <th>30d</th>
+                <th>24h Volume</th>
+                <th>Market Cap</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </article>
     <include src="components/footer/index.html" locals="{}"></include>
     <script type="module">
       import { getCoins } from "../js/coins.ts";
@@ -127,17 +129,17 @@
         coins.forEach((coin, index) => {
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td>${index + 1}</td>
-            <td><a href="/coin/${coin.coin_name.toLowerCase()}">${
+          <td>${index + 1}</td>
+          <td><a href="/coin/${coin.coin_name.toLowerCase()}">${
             coin.coin_name
           }</a></td>
-            <td>$${coin.currentPrice?.toFixed(2) || "N/A"}</td>
-            <td>${coin.priceChange1d || "N/A"}%</td>
-            <td>${coin.priceChange7d || "N/A"}%</td>
-            <td>${coin.priceChange30d || "N/A"}%</td>
-            <td>$${coin.volume?.toLocaleString() || "N/A"}</td>
-            <td>$${coin.marketCap?.toLocaleString() || "N/A"}</td>
-          `;
+          <td>$${coin.currentPrice?.toFixed(2) || "N/A"}</td>
+          <td>${coin.priceChange1d || "N/A"}%</td>
+          <td>${coin.priceChange7d || "N/A"}%</td>
+          <td>${coin.priceChange30d || "N/A"}%</td>
+          <td>$${coin.volume?.toLocaleString() || "N/A"}</td>
+          <td>$${coin.marketCap?.toLocaleString() || "N/A"}</td>
+        `;
           tableBody.appendChild(row);
         });
       }
