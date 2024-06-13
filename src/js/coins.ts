@@ -5,15 +5,14 @@ const corsProxy = process.env.REACT_APP_CORS_PROXY;
 
 interface Coin {
   id: number;
-  coinbase_id: string;
   coin_name: string;
-  logo_url?: string;
   currentPrice?: number;
   priceChange1d?: string;
   priceChange7d?: string;
   priceChange30d?: string;
   volume?: number;
   marketCap?: number;
+  logoUrl?: string;
 }
 
 // Queue to manage requests
@@ -36,7 +35,7 @@ async function processQueue() {
       requestQueue.delete(task);
       console.log(`Processing task for coin`);
       await task();
-      await delay(350); // Adjust the delay to stay within the rate limit
+      await delay(350); // Adjust the delay to ensure we stay within rate limits
     }
   }
 
@@ -51,72 +50,58 @@ function addToQueue(task: () => Promise<void>) {
   }
 }
 
-// Function to fetch coin data with exponential backoff
+// Function to fetch coin data from Coinbase API
 async function fetchCoinData(
   coin: Coin,
   tableBody: HTMLElement,
-  retries = 10, // Maximum retries for up to ~60 seconds
+  retries = 5,
   backoff = 1000
 ): Promise<void> {
-  console.log(`Fetching data for coin: ${coin.coinbase_id}`);
+  console.log(`Fetching data for coin: ${coin.coin_name}`);
   try {
     const response = await axios.get(
-      `${corsProxy}https://api.coinbase.com/v2/assets/search`,
-      {
-        params: {
-          base: coin.coinbase_id,
-          limit: 1,
-        },
-      }
+      `${corsProxy}https://api.coinbase.com/v2/prices/${coin.coin_name}-USD/spot`
     );
-    console.log(`Received data for coin: ${coin.coinbase_id}`, response.data);
-    const data = response.data.data[0];
-    if (!data) {
-      throw new Error(`No data found for coin: ${coin.coinbase_id}`);
-    }
-    const currentPrice = data.latest;
-    const price1dAgo = data.latest - data["1d"];
-    const price7dAgo = data.latest - data["7d"];
-    const price30dAgo = data.latest - data["30d"];
-    const priceChange1d = ((currentPrice - price1dAgo) / price1dAgo) * 100;
-    const priceChange7d = ((currentPrice - price7dAgo) / price7dAgo) * 100;
-    const priceChange30d = ((currentPrice - price30dAgo) / price30dAgo) * 100;
+    const data = response.data.data;
+    const currentPrice = parseFloat(data.amount);
+
+    // Fetch logo URL
+    const logoResponse = await axios.get(
+      `${corsProxy}https://api.coinbase.com/v2/assets/icons/${coin.coin_name.toLowerCase()}`
+    );
+    const logoUrl = logoResponse.data.data.icon_url;
 
     const enhancedCoin: Coin = {
       ...coin,
-      logo_url: data.image_url,
       currentPrice,
-      priceChange1d: priceChange1d.toFixed(2),
-      priceChange7d: priceChange7d.toFixed(2),
-      priceChange30d: priceChange30d.toFixed(2),
-      volume: data.volume_24h,
-      marketCap: data.market_cap,
+      priceChange1d: "N/A", // Placeholder for price changes (not available in this endpoint)
+      priceChange7d: "N/A",
+      priceChange30d: "N/A",
+      volume: 0, // Placeholder for volume (not available in this endpoint)
+      marketCap: 0, // Placeholder for market cap (not available in this endpoint)
+      logoUrl,
     };
 
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td><img src="${enhancedCoin.logo_url}" alt="${
+      <td><img src="${enhancedCoin.logoUrl}" alt="${
       enhancedCoin.coin_name
-    } logo" width="24" height="24"/></td>
+    }" width="24" height="24" /></td>
       <td><a href="/coin/${enhancedCoin.coin_name.toLowerCase()}">${
       enhancedCoin.coin_name
     }</a></td>
       <td>$${enhancedCoin.currentPrice?.toFixed(2) || "N/A"}</td>
-      <td>${enhancedCoin.priceChange1d || "N/A"}%</td>
-      <td>${enhancedCoin.priceChange7d || "N/A"}%</td>
-      <td>${enhancedCoin.priceChange30d || "N/A"}%</td>
+      <td>${enhancedCoin.priceChange1d}</td>
+      <td>${enhancedCoin.priceChange7d}</td>
+      <td>${enhancedCoin.priceChange30d}</td>
       <td>$${enhancedCoin.volume?.toLocaleString() || "N/A"}</td>
       <td>$${enhancedCoin.marketCap?.toLocaleString() || "N/A"}</td>
     `;
     tableBody.appendChild(row);
   } catch (error: any) {
-    console.error(
-      `Error fetching Coinbase data for ${coin.coinbase_id}:`,
-      error
-    );
     if (error.response && error.response.status === 429 && retries > 0) {
       console.warn(
-        `Rate limited. Retrying ${coin.coinbase_id} in ${backoff}ms...`
+        `Rate limited. Retrying ${coin.coin_name} in ${backoff}ms...`
       );
       await delay(backoff);
       return fetchCoinData(
@@ -124,6 +109,11 @@ async function fetchCoinData(
         tableBody,
         retries - 1,
         Math.min(backoff * 2, 60000)
+      );
+    } else {
+      console.error(
+        `Error fetching Coinbase data for ${coin.coin_name}:`,
+        error
       );
     }
   }
@@ -144,10 +134,8 @@ export async function getCoins(): Promise<void> {
 
   // Adding tasks to the queue and ensuring each coin is processed only once
   coins.forEach((coin) => {
-    if (!coin.coinbase_id) {
-      console.warn(
-        `Skipping coin with undefined coinbase_id: ${coin.coin_name}`
-      );
+    if (!coin.coin_name) {
+      console.warn(`Skipping coin with undefined coin_name: ${coin.coin_name}`);
       return;
     }
     addToQueue(() => fetchCoinData(coin, tableBody));

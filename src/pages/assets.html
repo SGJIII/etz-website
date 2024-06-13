@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="../styles/index.mobile.css" />
     <link rel="stylesheet" href="../styles/index.tablet.css" />
     <link rel="stylesheet" href="../styles/coins.css" />
-    <!-- Include coins.css -->
     <title>Coin List</title>
     <style id="antiClickjack">
       body {
@@ -124,39 +123,14 @@
     <script type="module">
       import { getCoins } from "../js/coins.ts";
 
-      async function renderCoinsList() {
-        const coins = await getCoins();
-        console.log("Coins received for rendering:", coins);
-        const tableBody = document.querySelector("tbody");
-        if (!tableBody) return;
-        coins.forEach((coin, index) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-          <td><img src="${coin.logo_url}" alt="${
-            coin.coin_name
-          } logo" width="24" height="24"/></td>
-          <td><a href="/coin/${coin.coin_name.toLowerCase()}">${
-            coin.coin_name
-          }</a></td>
-          <td>$${coin.currentPrice?.toFixed(2) || "N/A"}</td>
-          <td>${coin.priceChange1d || "N/A"}%</td>
-          <td>${coin.priceChange7d || "N/A"}%</td>
-          <td>${coin.priceChange30d || "N/A"}%</td>
-          <td>$${coin.volume?.toLocaleString() || "N/A"}</td>
-          <td>$${coin.marketCap?.toLocaleString() || "N/A"}</td>
-        `;
-          tableBody.appendChild(row);
-        });
-      }
-
       document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
           const loaderContainer = document.getElementById("loader-container");
           if (loaderContainer) {
             loaderContainer.style.display = "none";
           }
-          renderCoinsList();
-        }, 3000); // Hide loader after 3 seconds and then render coins list
+          getCoins(); // Start fetching and displaying coins immediately
+        }, 3000); // Hide loader after 3 seconds and then start fetching coins
       });
     </script>
     <script type="module">
