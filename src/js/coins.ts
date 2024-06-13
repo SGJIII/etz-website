@@ -69,8 +69,11 @@ async function fetchCoinData(
         },
       }
     );
-    console.log(`Received data for coin: ${coin.coinbase_id}`);
+    console.log(`Received data for coin: ${coin.coinbase_id}`, response.data);
     const data = response.data.data[0];
+    if (!data) {
+      throw new Error(`No data found for coin: ${coin.coinbase_id}`);
+    }
     const currentPrice = data.latest;
     const price1dAgo = data.latest - data["1d"];
     const price7dAgo = data.latest - data["7d"];
@@ -107,6 +110,10 @@ async function fetchCoinData(
     `;
     tableBody.appendChild(row);
   } catch (error: any) {
+    console.error(
+      `Error fetching Coinbase data for ${coin.coinbase_id}:`,
+      error
+    );
     if (error.response && error.response.status === 429 && retries > 0) {
       console.warn(
         `Rate limited. Retrying ${coin.coinbase_id} in ${backoff}ms...`
@@ -117,11 +124,6 @@ async function fetchCoinData(
         tableBody,
         retries - 1,
         Math.min(backoff * 2, 60000)
-      );
-    } else {
-      console.error(
-        `Error fetching Coinbase data for ${coin.coinbase_id}:`,
-        error
       );
     }
   }
@@ -142,6 +144,12 @@ export async function getCoins(): Promise<void> {
 
   // Adding tasks to the queue and ensuring each coin is processed only once
   coins.forEach((coin) => {
+    if (!coin.coinbase_id) {
+      console.warn(
+        `Skipping coin with undefined coinbase_id: ${coin.coin_name}`
+      );
+      return;
+    }
     addToQueue(() => fetchCoinData(coin, tableBody));
   });
 
