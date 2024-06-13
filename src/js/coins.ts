@@ -54,7 +54,7 @@ function addToQueue(task: () => Promise<void>) {
 async function fetchCoinData(
   coin: Coin,
   tableBody: HTMLElement,
-  retries = 5,
+  retries = 10, // Maximum retries for up to ~60 seconds
   backoff = 1000
 ): Promise<void> {
   console.log(`Fetching data for coin: ${coin.coingecko_id}`);
@@ -109,7 +109,12 @@ async function fetchCoinData(
         `Rate limited. Retrying ${coin.coingecko_id} in ${backoff}ms...`
       );
       await delay(backoff);
-      return fetchCoinData(coin, tableBody, retries - 1, backoff * 2);
+      return fetchCoinData(
+        coin,
+        tableBody,
+        retries - 1,
+        Math.min(backoff * 2, 60000)
+      );
     } else {
       console.error(
         `Error fetching CoinGecko data for ${coin.coingecko_id}:`,
