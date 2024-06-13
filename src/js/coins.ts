@@ -5,8 +5,9 @@ const corsProxy = process.env.REACT_APP_CORS_PROXY;
 
 interface Coin {
   id: number;
-  coingecko_id: string;
+  coinbase_id: string;
   coin_name: string;
+  logo_url?: string;
   currentPrice?: number;
   priceChange1d?: string;
   priceChange7d?: string;
@@ -35,7 +36,7 @@ async function processQueue() {
       requestQueue.delete(task);
       console.log(`Processing task for coin`);
       await task();
-      await delay(2000); // Adjust the delay to ensure we stay within rate limits
+      await delay(350); // Adjust the delay to stay within the rate limit
     }
   }
 
@@ -57,41 +58,43 @@ async function fetchCoinData(
   retries = 10, // Maximum retries for up to ~60 seconds
   backoff = 1000
 ): Promise<void> {
-  console.log(`Fetching data for coin: ${coin.coingecko_id}`);
+  console.log(`Fetching data for coin: ${coin.coinbase_id}`);
   try {
     const response = await axios.get(
-      `${corsProxy}https://api.coingecko.com/api/v3/coins/${coin.coingecko_id}/market_chart`,
+      `${corsProxy}https://api.coinbase.com/v2/assets/search`,
       {
         params: {
-          vs_currency: "usd",
-          days: 30,
+          base: coin.coinbase_id,
+          limit: 1,
         },
       }
     );
-    console.log(`Received data for coin: ${coin.coingecko_id}`);
-    const prices = response.data.prices;
-    const currentPrice = prices[prices.length - 1][1];
-    const price1dAgo = prices[prices.length - 24][1];
-    const price7dAgo = prices[prices.length - 24 * 7][1];
-    const price30dAgo = prices[0][1]; // Assuming the first entry is 30 days ago
+    console.log(`Received data for coin: ${coin.coinbase_id}`);
+    const data = response.data.data[0];
+    const currentPrice = data.latest;
+    const price1dAgo = data.latest - data["1d"];
+    const price7dAgo = data.latest - data["7d"];
+    const price30dAgo = data.latest - data["30d"];
     const priceChange1d = ((currentPrice - price1dAgo) / price1dAgo) * 100;
     const priceChange7d = ((currentPrice - price7dAgo) / price7dAgo) * 100;
     const priceChange30d = ((currentPrice - price30dAgo) / price30dAgo) * 100;
 
     const enhancedCoin: Coin = {
       ...coin,
+      logo_url: data.image_url,
       currentPrice,
       priceChange1d: priceChange1d.toFixed(2),
       priceChange7d: priceChange7d.toFixed(2),
       priceChange30d: priceChange30d.toFixed(2),
-      volume:
-        response.data.total_volumes[response.data.total_volumes.length - 1][1],
-      marketCap:
-        response.data.market_caps[response.data.market_caps.length - 1][1],
+      volume: data.volume_24h,
+      marketCap: data.market_cap,
     };
 
     const row = document.createElement("tr");
     row.innerHTML = `
+      <td><img src="${enhancedCoin.logo_url}" alt="${
+      enhancedCoin.coin_name
+    } logo" width="24" height="24"/></td>
       <td><a href="/coin/${enhancedCoin.coin_name.toLowerCase()}">${
       enhancedCoin.coin_name
     }</a></td>
@@ -106,7 +109,7 @@ async function fetchCoinData(
   } catch (error: any) {
     if (error.response && error.response.status === 429 && retries > 0) {
       console.warn(
-        `Rate limited. Retrying ${coin.coingecko_id} in ${backoff}ms...`
+        `Rate limited. Retrying ${coin.coinbase_id} in ${backoff}ms...`
       );
       await delay(backoff);
       return fetchCoinData(
@@ -117,7 +120,7 @@ async function fetchCoinData(
       );
     } else {
       console.error(
-        `Error fetching CoinGecko data for ${coin.coingecko_id}:`,
+        `Error fetching Coinbase data for ${coin.coinbase_id}:`,
         error
       );
     }
