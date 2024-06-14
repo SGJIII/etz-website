@@ -6,6 +6,8 @@ const corsProxy = process.env.REACT_APP_CORS_PROXY;
 interface Coin {
   id: number;
   coin_name: string;
+  coinbase_product_id: string;
+  coin_base: string;
   coingecko_id: string;
   currentPrice?: number;
   priceChange1d?: string;
@@ -52,7 +54,28 @@ function addToQueue(task: () => Promise<void>) {
   }
 }
 
-// Function to fetch coin data from CoinGecko API
+// Function to fetch historical data
+async function fetchHistoricalData(
+  product_id: string,
+  granularity: number
+): Promise<any[]> {
+  const now = new Date();
+  const end = Math.floor(now.getTime() / 1000);
+  const start = end - granularity * 86400;
+  const url = `${corsProxy}https://api.exchange.coinbase.com/products/${product_id}/candles`;
+
+  const response = await axios.get(url, {
+    params: {
+      granularity: 86400,
+      start,
+      end,
+    },
+  });
+
+  return response.data;
+}
+
+// Function to fetch coin data from Coinbase API
 async function fetchCoinData(
   coin: Coin,
   tableBody: HTMLElement,
@@ -62,39 +85,25 @@ async function fetchCoinData(
   console.log(`Fetching data for coin: ${coin.coin_name}`);
   try {
     const response = await axios.get(
-      `${corsProxy}https://api.coingecko.com/api/v3/coins/markets`,
-      {
-        params: {
-          vs_currency: "usd",
-          ids: coin.coingecko_id,
-        },
-      }
+      `${corsProxy}https://api.exchange.coinbase.com/products/${coin.coinbase_product_id}/ticker`
     );
-    const marketData = response.data[0];
-    const currentPrice = marketData.current_price;
-    const marketCap = marketData.market_cap;
-    const volume = marketData.total_volume;
+    const marketData = response.data;
+    const currentPrice = parseFloat(marketData.price);
+    const volume = parseFloat(marketData.volume);
 
     // Fetch historical data
-    const historyResponse = await axios.get(
-      `${corsProxy}https://api.coingecko.com/api/v3/coins/${coin.coingecko_id}/market_chart`,
-      {
-        params: {
-          vs_currency: "usd",
-          days: 30,
-        },
-      }
-    );
-    const prices = historyResponse.data.prices;
+    const [candles1d, candles7d, candles30d] = await Promise.all([
+      fetchHistoricalData(coin.coinbase_product_id, 1),
+      fetchHistoricalData(coin.coinbase_product_id, 7),
+      fetchHistoricalData(coin.coinbase_product_id, 30),
+    ]);
+
     const priceChange1d =
-      ((currentPrice - prices[prices.length - 2][1]) /
-        prices[prices.length - 2][1]) *
-      100;
+      ((currentPrice - candles1d[0][4]) / candles1d[0][4]) * 100;
     const priceChange7d =
-      ((currentPrice - prices[prices.length - 8][1]) /
-        prices[prices.length - 8][1]) *
-      100;
-    const priceChange30d = ((currentPrice - prices[0][1]) / prices[0][1]) * 100;
+      ((currentPrice - candles7d[0][4]) / candles7d[0][4]) * 100;
+    const priceChange30d =
+      ((currentPrice - candles30d[0][4]) / candles30d[0][4]) * 100;
 
     const enhancedCoin: Coin = {
       ...coin,
@@ -103,7 +112,7 @@ async function fetchCoinData(
       priceChange7d: priceChange7d.toFixed(2),
       priceChange30d: priceChange30d.toFixed(2),
       volume,
-      marketCap,
+      marketCap: 0, // Placeholder for market cap
     };
 
     const row = document.createElement("tr");
@@ -115,16 +124,16 @@ async function fetchCoinData(
       enhancedCoin.coin_name
     }</a></td>
       <td>$${enhancedCoin.currentPrice?.toFixed(2) || "N/A"}</td>
-      <td>${enhancedCoin.priceChange1d || "N/A"}%</td>
-      <td>${enhancedCoin.priceChange7d || "N/A"}%</td>
-      <td>${enhancedCoin.priceChange30d || "N/A"}%</td>
+      <td>${enhancedCoin.priceChange1d}</td>
+      <td>${enhancedCoin.priceChange7d}</td>
+      <td>${enhancedCoin.priceChange30d}</td>
       <td>$${enhancedCoin.volume?.toLocaleString() || "N/A"}</td>
       <td>$${enhancedCoin.marketCap?.toLocaleString() || "N/A"}</td>
     `;
     tableBody.appendChild(row);
   } catch (error: any) {
     if (error.response && error.response.status === 404) {
-      console.error(`Coin not found on CoinGecko: ${coin.coin_name}`);
+      console.error(`Coin not found on Coinbase: ${coin.coin_name}`);
     } else if (error.response && error.response.status === 429 && retries > 0) {
       console.warn(
         `Rate limited. Retrying ${coin.coin_name} in ${backoff}ms...`
@@ -138,7 +147,7 @@ async function fetchCoinData(
       );
     } else {
       console.error(
-        `Error fetching CoinGecko data for ${coin.coin_name}:`,
+        `Error fetching Coinbase data for ${coin.coin_name}:`,
         error
       );
     }
@@ -148,7 +157,12 @@ async function fetchCoinData(
 // Function to get coins and process them in chunks
 export async function getCoins(): Promise<void> {
   console.log("Fetching coins from Supabase...");
-  const { data: coins, error } = await supabase.from("coins").select("*");
+  const { data: coins, error } = await supabase
+    .from("coins")
+    .select("*")
+    .neq("ai_content", null)
+    .neq("coin_base", null)
+    .neq("logo_url", null);
   if (error) {
     console.error("Error fetching coins from Supabase:", error);
     return;
