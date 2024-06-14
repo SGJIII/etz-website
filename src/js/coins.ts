@@ -57,11 +57,11 @@ function addToQueue(task: () => Promise<void>) {
 // Function to fetch historical data
 async function fetchHistoricalData(
   product_id: string,
-  granularity: number
+  days: number
 ): Promise<any[]> {
   const now = new Date();
   const end = Math.floor(now.getTime() / 1000);
-  const start = end - granularity * 86400;
+  const start = end - days * 86400;
   const url = `${corsProxy}https://api.exchange.coinbase.com/products/${product_id}/candles`;
 
   const response = await axios.get(url, {
@@ -84,13 +84,6 @@ async function fetchCoinData(
 ): Promise<void> {
   console.log(`Fetching data for coin: ${coin.coin_name}`);
   try {
-    const response = await axios.get(
-      `${corsProxy}https://api.exchange.coinbase.com/products/${coin.coinbase_product_id}/ticker`
-    );
-    const marketData = response.data;
-    const currentPrice = parseFloat(marketData.price);
-    const volume = parseFloat(marketData.volume);
-
     // Fetch historical data
     const [candles1d, candles7d, candles30d] = await Promise.all([
       fetchHistoricalData(coin.coinbase_product_id, 1),
@@ -98,18 +91,15 @@ async function fetchCoinData(
       fetchHistoricalData(coin.coinbase_product_id, 30),
     ]);
 
+    const currentPrice = candles1d[candles1d.length - 1][4];
+    const volume = candles1d.reduce((acc, candle) => acc + candle[5], 0);
+
     const priceChange1d =
-      ((currentPrice - candles1d[candles1d.length - 1][4]) /
-        candles1d[candles1d.length - 1][4]) *
-      100;
+      ((currentPrice - candles1d[0][4]) / candles1d[0][4]) * 100;
     const priceChange7d =
-      ((currentPrice - candles7d[candles7d.length - 1][4]) /
-        candles7d[candles7d.length - 1][4]) *
-      100;
+      ((currentPrice - candles7d[0][4]) / candles7d[0][4]) * 100;
     const priceChange30d =
-      ((currentPrice - candles30d[candles30d.length - 1][4]) /
-        candles30d[candles30d.length - 1][4]) *
-      100;
+      ((currentPrice - candles30d[0][4]) / candles30d[0][4]) * 100;
 
     const enhancedCoin: Coin = {
       ...coin,
