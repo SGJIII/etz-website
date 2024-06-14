@@ -12,7 +12,8 @@ interface Coin {
   priceChange30d?: string;
   volume?: number;
   marketCap?: number;
-  logoUrl?: string;
+  logo_url?: string;
+  ai_content?: string;
 }
 
 // Queue to manage requests
@@ -70,12 +71,6 @@ async function fetchCoinData(
     const data = response.data;
     const currentPrice = data[0][4]; // Closing price
 
-    // Fetch logo URL (Assuming an endpoint exists for logos)
-    const logoResponse = await axios.get(
-      `${corsProxy}https://api.coinbase.com/v2/assets/icons/${coin.coin_name.toLowerCase()}`
-    );
-    const logoUrl = logoResponse.data.data.icon_url;
-
     const enhancedCoin: Coin = {
       ...coin,
       currentPrice,
@@ -84,12 +79,11 @@ async function fetchCoinData(
       priceChange30d: "N/A",
       volume: 0, // Placeholder for volume (not available in this endpoint)
       marketCap: 0, // Placeholder for market cap (not available in this endpoint)
-      logoUrl,
     };
 
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td><img src="${enhancedCoin.logoUrl}" alt="${
+      <td><img src="${enhancedCoin.logo_url}" alt="${
       enhancedCoin.coin_name
     }" width="24" height="24" /></td>
       <td><a href="/coin/${enhancedCoin.coin_name.toLowerCase()}">${
@@ -129,7 +123,10 @@ async function fetchCoinData(
 // Function to get coins and process them in chunks
 export async function getCoins(): Promise<void> {
   console.log("Fetching coins from Supabase...");
-  const { data: coins, error } = await supabase.from("coins").select("*");
+  const { data: coins, error } = await supabase
+    .from("coins")
+    .select("*")
+    .not("ai_content", "is", null); // Only fetch coins with non-null ai_content
   if (error) {
     console.error("Error fetching coins from Supabase:", error);
     return;

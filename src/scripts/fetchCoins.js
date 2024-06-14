@@ -16,7 +16,10 @@ const fetchCoins = async () => {
       const response = await axios.get(url);
       const coins = response.data.data;
 
-      if (!coins.length) break;
+      if (!coins || coins.length === 0) {
+        console.error("No coins data received from Coinbase");
+        break;
+      }
 
       allCoins = allCoins.concat(coins);
 
@@ -24,7 +27,7 @@ const fetchCoins = async () => {
       const nextPage = response.data.pagination.next_uri;
       url = nextPage ? `https://api.coinbase.com${nextPage}` : null;
     } catch (error) {
-      console.error("Error fetching coins from Coinbase:", error);
+      console.error("Error fetching coins from Coinbase:", error.message);
       break;
     }
 
@@ -42,14 +45,27 @@ const fetchCoins = async () => {
 // Add or update coins in the database
 const upsertCoinsToDatabase = async (coins) => {
   for (const coin of coins) {
-    const { data, error } = await supabase
-      .from("coins")
-      .upsert([{ coin_name: coin.base }], { onConflict: ["coin_name"] });
+    try {
+      const { data, error } = await supabase.from("coins").upsert(
+        {
+          coin_name: coin.base, // Ensure this matches your database schema
+          coin_base: coin.base,
+          coinbase_product_id: `${coin.base}-USD`,
+        },
+        { onConflict: ["coin_name"] } // Ensure this matches your conflict resolution column
+      );
 
-    if (error) {
-      console.error("Error upserting coin to database:", error);
-    } else {
-      console.log(`Successfully upserted coin: ${coin.base}`);
+      if (error) {
+        console.error(
+          `Error upserting coin to database: ${coin.base}`,
+          error.message
+        );
+      } else {
+        console.log(`Successfully upserted coin: ${coin.base}`);
+        console.log("Upsert result:", data); // Log the data returned by the upsert
+      }
+    } catch (error) {
+      console.error(`Error during upsert of coin: ${coin.base}`, error.message);
     }
 
     await delay(1000); // Delay to prevent rate limiting issues
@@ -58,19 +74,23 @@ const upsertCoinsToDatabase = async (coins) => {
 
 // Main function to run the script
 const main = async () => {
-  const { data: existingCoins, error: fetchError } = await supabase
-    .from("coins")
-    .select("*");
-  if (fetchError) {
-    console.error("Error fetching existing coins:", fetchError);
-  } else {
-    console.log("Existing coins in database:", existingCoins);
-  }
+  try {
+    const { data: existingCoins, error: fetchError } = await supabase
+      .from("coins")
+      .select("*");
+    if (fetchError) {
+      console.error("Error fetching existing coins:", fetchError.message);
+    } else {
+      console.log("Existing coins in database:", existingCoins.length);
+    }
 
-  const coins = await fetchCoins();
-  console.log("Fetched coins:", coins);
-  await upsertCoinsToDatabase(coins);
-  console.log("Done.");
+    const coins = await fetchCoins();
+    console.log("Fetched coins from Coinbase:", coins.length);
+    await upsertCoinsToDatabase(coins);
+    console.log("Done.");
+  } catch (error) {
+    console.error("Error in main function:", error.message);
+  }
 };
 
 main();
