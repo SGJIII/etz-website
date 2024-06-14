@@ -100,15 +100,21 @@ async function fetchCoinData(
 
     const priceChange1d =
       candles1d.length > 1
-        ? ((currentPrice - candles1d[0][4]) / candles1d[0][4]) * 100
+        ? ((candles1d[candles1d.length - 1][4] - candles1d[0][1]) /
+            candles1d[0][1]) *
+          100
         : 0;
     const priceChange7d =
       candles7d.length > 1
-        ? ((currentPrice - candles7d[0][4]) / candles7d[0][4]) * 100
+        ? ((candles7d[candles7d.length - 1][4] - candles7d[0][1]) /
+            candles7d[0][1]) *
+          100
         : 0;
     const priceChange30d =
       candles30d.length > 1
-        ? ((currentPrice - candles30d[0][4]) / candles30d[0][4]) * 100
+        ? ((candles30d[candles30d.length - 1][4] - candles30d[0][1]) /
+            candles30d[0][1]) *
+          100
         : 0;
 
     const enhancedCoin: Coin = {
