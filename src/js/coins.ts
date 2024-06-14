@@ -91,6 +91,10 @@ async function fetchCoinData(
       fetchHistoricalData(coin.coinbase_product_id, 30),
     ]);
 
+    if (!candles1d.length || !candles7d.length || !candles30d.length) {
+      throw new Error(`Insufficient data for ${coin.coin_name}`);
+    }
+
     const currentPrice = candles1d[candles1d.length - 1][4];
     const volume = candles1d.reduce((acc, candle) => acc + candle[5], 0);
 
