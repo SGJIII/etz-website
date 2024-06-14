@@ -99,11 +99,17 @@ async function fetchCoinData(
     ]);
 
     const priceChange1d =
-      ((currentPrice - candles1d[0][4]) / candles1d[0][4]) * 100;
+      ((currentPrice - candles1d[candles1d.length - 1][4]) /
+        candles1d[candles1d.length - 1][4]) *
+      100;
     const priceChange7d =
-      ((currentPrice - candles7d[0][4]) / candles7d[0][4]) * 100;
+      ((currentPrice - candles7d[candles7d.length - 1][4]) /
+        candles7d[candles7d.length - 1][4]) *
+      100;
     const priceChange30d =
-      ((currentPrice - candles30d[0][4]) / candles30d[0][4]) * 100;
+      ((currentPrice - candles30d[candles30d.length - 1][4]) /
+        candles30d[candles30d.length - 1][4]) *
+      100;
 
     const enhancedCoin: Coin = {
       ...coin,
