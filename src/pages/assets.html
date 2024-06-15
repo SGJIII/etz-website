@@ -108,9 +108,7 @@
                 <th>Buy</th>
               </tr>
             </thead>
-            <tbody id="coin-list">
-              <!-- Coins will be populated here -->
-            </tbody>
+            <tbody></tbody>
           </table>
         </div>
       </div>
@@ -149,38 +147,5 @@
     <script type="module" src="../js/links/links.ts" async></script>
     <script type="module" src="../js/header-menu.ts" async></script>
     <script type="module" src="../js/index.ts" async></script>
-    <script type="module">
-      import { getCoins } from "../js/coins.ts";
-
-      async function populateCoins() {
-        const { data: coins, error } = await getCoins();
-        if (error) {
-          console.error("Error fetching coins:", error);
-          return;
-        }
-
-        const coinList = document.getElementById("coin-list");
-        if (!coinList) return;
-
-        coins.forEach((coin) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-        <td><img src="${coin.logo_url}" alt="${
-            coin.coin_name
-          }" width="24" height="24" /></td>
-        <td><a href="/coin/${coin.coin_name.toLowerCase()}.html">${
-            coin.coin_name
-          }</a></td>
-        <td>${coin.current_price}</td>
-        <td>${coin.price_change_percentage_24h}</td>
-        <td>${coin.total_volume}</td>
-        <td><a href="https://etz.app.link/1lHEM3jysKb" class="buy-button">Buy</a></td>
-      `;
-          coinList.appendChild(row);
-        });
-      }
-
-      document.addEventListener("DOMContentLoaded", populateCoins);
-    </script>
   </body>
 </html>
