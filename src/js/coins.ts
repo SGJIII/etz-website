@@ -17,6 +17,7 @@ interface Coin {
   marketCap?: number;
   logo_url?: string;
   ai_content?: string;
+  market_cap_rank?: number;
 }
 
 // Queue to manage requests
@@ -140,7 +141,6 @@ async function fetchCoinData(
       <td>${enhancedCoin.priceChange7d}</td>
       <td>${enhancedCoin.priceChange30d}</td>
       <td>$${enhancedCoin.volume?.toLocaleString() || "N/A"}</td>
-      <td>$${enhancedCoin.marketCap?.toLocaleString() || "N/A"}</td>
     `;
     tableBody.appendChild(row);
   } catch (error: any) {
@@ -174,7 +174,8 @@ export async function getCoins(): Promise<void> {
     .select("*")
     .neq("ai_content", null)
     .neq("coin_base", null)
-    .neq("logo_url", null);
+    .neq("logo_url", null)
+    .order("market_cap_rank", { ascending: true });
   if (error) {
     console.error("Error fetching coins from Supabase:", error);
     return;

@@ -6,34 +6,35 @@ const { supabase } = require("../lib/supabase");
 // Delay function to handle rate limiting
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Fetch coin data from CoinGecko API
-const fetchCoinData = async (coin, backoff = 1000) => {
+// Fetch coin data from CoinGecko API for multiple coins
+const fetchAllCoinData = async (coinIds, backoff = 1000) => {
   const url = `https://api.coingecko.com/api/v3/coins/markets`;
   try {
     const response = await axios.get(url, {
       params: {
         vs_currency: "usd",
-        ids: coin.coingecko_id,
+        ids: coinIds.join(","),
       },
     });
 
     if (response.data.length > 0) {
-      const { image } = response.data[0];
-      return image;
+      const coinDataMap = {};
+      response.data.forEach(({ id, name, image, market_cap_rank }) => {
+        coinDataMap[id] = { name, image, market_cap_rank };
+      });
+      return coinDataMap;
     } else {
-      console.warn(`No data found for coin: ${coin.coingecko_id}`);
+      console.warn(`No data found for coins: ${coinIds.join(",")}`);
       return null;
     }
   } catch (error) {
     if (error.response && error.response.status === 429) {
-      console.warn(
-        `Rate limited. Retrying ${coin.coingecko_id} in ${backoff}ms...`
-      );
+      console.warn(`Rate limited. Retrying in ${backoff}ms...`);
       await delay(backoff);
-      return fetchCoinData(coin, Math.min(backoff * 2, 60000));
+      return fetchAllCoinData(coinIds, Math.min(backoff * 2, 60000));
     } else {
       console.error(
-        `Error fetching CoinGecko data for ${coin.coingecko_id}:`,
+        `Error fetching CoinGecko data for coins: ${coinIds.join(",")}:`,
         error
       );
       return null;
@@ -42,11 +43,19 @@ const fetchCoinData = async (coin, backoff = 1000) => {
 };
 
 // Add or update coins in the database
-const updateCoinIcon = async (coin, iconUrl, backoff = 1000) => {
+const updateCoinData = async (coin, coinData, backoff = 1000) => {
   try {
+    const updateFields = {
+      market_cap_rank: coinData.market_cap_rank,
+    };
+
+    if (!coin.logo_url) {
+      updateFields.logo_url = coinData.image;
+    }
+
     const { data, error } = await supabase
       .from("coins")
-      .update({ logo_url: iconUrl })
+      .update(updateFields)
       .eq("coingecko_id", coin.coingecko_id);
 
     if (error) {
@@ -55,7 +64,12 @@ const updateCoinIcon = async (coin, iconUrl, backoff = 1000) => {
           `Rate limited. Retrying ${coin.coingecko_id} in ${backoff}ms...`
         );
         await delay(backoff);
-        return updateCoinIcon(coin, iconUrl, Math.min(backoff * 2, 60000));
+        return updateCoinData(coin, coinData, Math.min(backoff * 2, 60000));
+      } else if (error.code === "23505") {
+        console.warn(
+          `Duplicate coin name for ${coin.coingecko_id}. Skipping update for coin_name.`
+        );
+        return;
       } else {
         console.error("Error updating coin in database:", error);
       }
@@ -67,7 +81,7 @@ const updateCoinIcon = async (coin, iconUrl, backoff = 1000) => {
       `Error updating coin in database. Retrying ${coin.coingecko_id} in ${backoff}ms...`
     );
     await delay(backoff);
-    return updateCoinIcon(coin, iconUrl, Math.min(backoff * 2, 60000));
+    return updateCoinData(coin, coinData, Math.min(backoff * 2, 60000));
   }
 };
 
@@ -77,9 +91,7 @@ const main = async () => {
   const { data: coins, error } = await supabase
     .from("coins")
     .select("*")
-    .is("logo_url", null)
-    .not("coin_base", "is", null)
-    .not("ai_content", "is", null)
+    .is("market_cap_rank", null)
     .not("coingecko_id", "is", null); // Only fetch coins with a coingecko_id
 
   if (error) {
@@ -89,11 +101,15 @@ const main = async () => {
 
   console.log(`Fetched ${coins.length} coins from Supabase.`);
 
-  for (const coin of coins) {
-    const iconUrl = await fetchCoinData(coin);
-    if (iconUrl) {
-      await updateCoinIcon(coin, iconUrl);
-      await delay(500); // Delay to prevent rate limiting issues
+  const coinIds = coins.map((coin) => coin.coingecko_id);
+  const coinDataMap = await fetchAllCoinData(coinIds);
+
+  if (coinDataMap) {
+    for (const coin of coins) {
+      const coinData = coinDataMap[coin.coingecko_id];
+      if (coinData) {
+        await updateCoinData(coin, coinData);
+      }
     }
   }
 

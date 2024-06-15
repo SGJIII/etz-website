@@ -1,0 +1,112 @@
+/* eslint @typescript-eslint/no-var-requires: "off" */
+require("dotenv").config({ path: "./.env.staging" });
+const axios = require("axios");
+const { supabase } = require("../lib/supabase");
+
+// Delay function to handle rate limiting
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Fetch market cap rank for multiple coins from CoinGecko API
+const fetchCoinDataBulk = async (coinIds, backoff = 1000) => {
+  const url = `https://api.coingecko.com/api/v3/coins/markets`;
+  try {
+    const response = await axios.get(url, {
+      params: {
+        vs_currency: "usd",
+        ids: coinIds.join(","),
+      },
+    });
+
+    if (response.data.length > 0) {
+      const coinDataMap = {};
+      response.data.forEach(({ id, market_cap_rank }) => {
+        coinDataMap[id] = { market_cap_rank };
+      });
+      return coinDataMap;
+    } else {
+      console.warn(`No data found for coin IDs: ${coinIds.join(",")}`);
+      return null;
+    }
+  } catch (error) {
+    if (error.response && error.response.status === 429) {
+      console.warn(
+        `Rate limited. Retrying in ${backoff}ms...`
+      );
+      await delay(backoff);
+      return fetchCoinDataBulk(coinIds, Math.min(backoff * 2, 60000));
+    } else {
+      console.error(
+        `Error fetching CoinGecko data for coin IDs: ${coinIds.join(",")}:`,
+        error
+      );
+      return null;
+    }
+  }
+};
+
+// Update market cap rank in the database
+const updateMarketCapRank = async (coin, coinData, backoff = 1000) => {
+  try {
+    const { data, error } = await supabase
+      .from("coins")
+      .update({ market_cap_rank: coinData.market_cap_rank })
+      .eq("coingecko_id", coin.coingecko_id);
+
+    if (error) {
+      if (error.code === "429") {
+        console.warn(
+          `Rate limited. Retrying ${coin.coingecko_id} in ${backoff}ms...`
+        );
+        await delay(backoff);
+        return updateMarketCapRank(coin, coinData, Math.min(backoff * 2, 60000));
+      } else {
+        console.error("Error updating market cap rank in database:", error);
+      }
+    } else {
+      console.log(`Successfully updated market cap rank for ${coin.coingecko_id}`);
+    }
+  } catch (error) {
+    console.warn(
+      `Error updating market cap rank in database. Retrying ${coin.coingecko_id} in ${backoff}ms...`
+    );
+    await delay(backoff);
+    return updateMarketCapRank(coin, coinData, Math.min(backoff * 2, 60000));
+  }
+};
+
+// Main function to run the script
+const main = async () => {
+  console.log("Fetching coins from Supabase...");
+  const { data: coins, error } = await supabase
+    .from("coins")
+    .select("id, coingecko_id")
+    .not("coin_base", "is", null);
+  if (error) {
+    console.error("Error fetching coins from Supabase:", error);
+    return;
+  }
+
+  console.log(`Fetched ${coins.length} coins from Supabase.`);
+
+  const batchSize = 100; // Adjust batch size as needed
+  for (let i = 0; i < coins.length; i += batchSize) {
+    const coinBatch = coins.slice(i, i + batchSize);
+    const coinIds = coinBatch.map(coin => coin.coingecko_id);
+    const coinDataMap = await fetchCoinDataBulk(coinIds);
+
+    if (coinDataMap) {
+      for (const coin of coinBatch) {
+        const coinData = coinDataMap[coin.coingecko_id];
+        if (coinData) {
+          await updateMarketCapRank(coin, coinData);
+        }
+      }
+    }
+
+    await delay(1000); // Delay to prevent rate limiting issues
+  }
+
+  console.log("Done.");
+};
+
+main();
