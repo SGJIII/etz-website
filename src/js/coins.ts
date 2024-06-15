@@ -52,25 +52,6 @@ function addToQueue(task: () => Promise<void>) {
   }
 }
 
-// Function to fetch historical data
-async function fetchHistoricalData(
-  product_id: string,
-  start: number,
-  end: number
-): Promise<any[]> {
-  const url = `${corsProxy}https://api.exchange.coinbase.com/products/${product_id}/candles`;
-
-  const response = await axios.get(url, {
-    params: {
-      granularity: 86400,
-      start,
-      end,
-    },
-  });
-
-  return response.data;
-}
-
 // Function to fetch coin data from Coinbase API
 async function fetchCoinData(
   coin: Coin,
@@ -86,25 +67,19 @@ async function fetchCoinData(
 
     // Special case for USDC
     if (coin.coin_name !== "USD Coin") {
-      const tickerResponse = await axios.get(
-        `${corsProxy}https://api.exchange.coinbase.com/products/${coin.coinbase_product_id}/ticker`
+      const statsResponse = await axios.get(
+        `${corsProxy}https://api.exchange.coinbase.com/products/${coin.coinbase_product_id}/stats`
       );
 
-      currentPrice = parseFloat(tickerResponse.data.price);
-      volume = parseFloat(tickerResponse.data.volume);
+      const stats24h = statsResponse.data.stats_24hour;
 
-      const now = Math.floor(Date.now() / 1000);
-      const start = now - 86400; // 24 hours ago
+      currentPrice = parseFloat(stats24h.last);
+      volume = parseFloat(stats24h.volume);
+      const open = parseFloat(stats24h.open);
+      const last = parseFloat(stats24h.last);
 
-      const candles = await fetchHistoricalData(
-        coin.coinbase_product_id,
-        start,
-        now
-      );
-
-      if (candles.length > 0) {
-        const open = candles[0][1];
-        priceChange24h = (((currentPrice - open) / open) * 100).toFixed(2);
+      if (open && last) {
+        priceChange24h = (((last - open) / open) * 100).toFixed(2);
       }
     }
 
