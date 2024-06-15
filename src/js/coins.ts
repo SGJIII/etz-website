@@ -14,7 +14,6 @@ interface Coin {
   priceChange7d?: string;
   priceChange30d?: string;
   volume?: number;
-  marketCap?: number;
   logo_url?: string;
   ai_content?: string;
   market_cap_rank?: number;
@@ -40,7 +39,7 @@ async function processQueue() {
       requestQueue.delete(task);
       console.log(`Processing task for coin`);
       await task();
-      await delay(350); // Adjust the delay to ensure we stay within rate limits
+      await delay(500); // Increased delay to prevent rate limiting
     }
   }
 
@@ -125,7 +124,6 @@ async function fetchCoinData(
       priceChange7d: priceChange7d.toFixed(2),
       priceChange30d: priceChange30d.toFixed(2),
       volume,
-      marketCap: 0, // Placeholder for market cap
     };
 
     const row = document.createElement("tr");
