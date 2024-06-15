@@ -75,7 +75,7 @@ async function fetchCoinData(
 
       if (stats) {
         currentPrice = parseFloat(stats.last);
-        volume = parseFloat(stats.volume);
+        volume = parseFloat(stats.volume) * currentPrice; // Convert volume to USD equivalent
         const open = parseFloat(stats.open);
         const last = parseFloat(stats.last);
 
