@@ -107,6 +107,7 @@ async function fetchCoinData(
       <td>$${enhancedCoin.currentPrice?.toFixed(2) || "N/A"}</td>
       <td>${enhancedCoin.priceChange24h}%</td>
       <td>$${formattedVolume}</td>
+      <td><a href="https://etz.app.link/1lHEM3jysKb" class="buy-button">Buy</a></td>
     `;
     tableBody.appendChild(row);
   } catch (error: any) {
