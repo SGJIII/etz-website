@@ -71,15 +71,19 @@ async function fetchCoinData(
         `${corsProxy}https://api.exchange.coinbase.com/products/${coin.coinbase_product_id}/stats`
       );
 
-      const stats24h = statsResponse.data.stats_24hour;
+      const stats = statsResponse.data;
 
-      currentPrice = parseFloat(stats24h.last);
-      volume = parseFloat(stats24h.volume);
-      const open = parseFloat(stats24h.open);
-      const last = parseFloat(stats24h.last);
+      if (stats) {
+        currentPrice = parseFloat(stats.last);
+        volume = parseFloat(stats.volume);
+        const open = parseFloat(stats.open);
+        const last = parseFloat(stats.last);
 
-      if (open && last) {
-        priceChange24h = (((last - open) / open) * 100).toFixed(2);
+        if (open && last) {
+          priceChange24h = (((last - open) / open) * 100).toFixed(2);
+        }
+      } else {
+        console.warn(`Stats data missing for ${coin.coin_name}`);
       }
     }
 
