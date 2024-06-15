@@ -75,7 +75,7 @@ async function fetchCoinData(
 
       if (stats) {
         currentPrice = parseFloat(stats.last);
-        volume = parseFloat(stats.volume) * currentPrice; // Convert volume to USD equivalent
+        volume = (parseFloat(stats.volume_30day) / 30) * currentPrice; // Convert 30-day volume to daily average in USD
         const open = parseFloat(stats.open);
         const last = parseFloat(stats.last);
 
