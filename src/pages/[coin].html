@@ -81,6 +81,7 @@
     <include src="components/footer/index.html" locals="{}"></include>
     <script type="module">
       import { getCoin } from "../js/coin.ts";
+
       async function renderCoinDetails() {
         const urlParams = new URLSearchParams(window.location.search);
         const coinName = urlParams.get("coin");
@@ -93,6 +94,7 @@
         document.querySelector("p").textContent = coin.description;
         document.querySelector("img").src = coin.image_url;
       }
+
       document.addEventListener("DOMContentLoaded", () => {
         renderCoinDetails();
       });
@@ -107,10 +109,11 @@
           document.documentElement.clientHeight || 0,
           window.innerHeight || 0
         );
-        document.documentElement.style.setProperty("--vw", `${vw}`);
-        document.documentElement.style.setProperty("--vh", `${vh}`);
+        document.documentElement.style.setProperty("--vw", `${vw}px`);
+        document.documentElement.style.setProperty("--vh", `${vh}px`);
         document.documentElement.style.setProperty("--vh-px", `${vh}px`);
       }
+
       setupSizePage();
       window.addEventListener("resize", setupSizePage);
     </script>
