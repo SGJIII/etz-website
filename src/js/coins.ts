@@ -10,9 +10,7 @@ interface Coin {
   coin_base: string;
   coingecko_id: string;
   currentPrice?: number;
-  priceChange1d?: string;
-  priceChange7d?: string;
-  priceChange30d?: string;
+  priceChange24h?: string;
   volume?: number;
   logo_url?: string;
   ai_content?: string;
@@ -54,27 +52,6 @@ function addToQueue(task: () => Promise<void>) {
   }
 }
 
-// Function to fetch historical data
-async function fetchHistoricalData(
-  product_id: string,
-  days: number
-): Promise<any[]> {
-  const now = new Date();
-  const end = Math.floor(now.getTime() / 1000);
-  const start = end - days * 86400;
-  const url = `${corsProxy}https://api.exchange.coinbase.com/products/${product_id}/candles`;
-
-  const response = await axios.get(url, {
-    params: {
-      granularity: 86400,
-      start,
-      end,
-    },
-  });
-
-  return response.data;
-}
-
 // Function to fetch coin data from Coinbase API
 async function fetchCoinData(
   coin: Coin,
@@ -84,47 +61,34 @@ async function fetchCoinData(
 ): Promise<void> {
   console.log(`Fetching data for coin: ${coin.coin_name}`);
   try {
-    // Fetch historical data
-    const [candles1d, candles7d, candles30d] = await Promise.all([
-      fetchHistoricalData(coin.coinbase_product_id, 1),
-      fetchHistoricalData(coin.coinbase_product_id, 7),
-      fetchHistoricalData(coin.coinbase_product_id, 30),
-    ]);
+    let currentPrice = 1.0;
+    let volume = 0;
+    let priceChange24h = "0";
 
-    if (!candles1d.length || !candles7d.length || !candles30d.length) {
-      throw new Error(`Insufficient data for ${coin.coin_name}`);
+    // Special case for USDC
+    if (coin.coin_name !== "USD Coin") {
+      const response = await axios.get(
+        `${corsProxy}https://api.exchange.coinbase.com/products/${coin.coinbase_product_id}/ticker`
+      );
+
+      currentPrice = parseFloat(response.data.price);
+      volume = parseFloat(response.data.volume);
+      const open = parseFloat(response.data.open);
+      const last = parseFloat(response.data.last);
+
+      if (open && last) {
+        priceChange24h = (((last - open) / open) * 100).toFixed(2);
+      }
     }
-
-    const currentPrice = candles1d[candles1d.length - 1][4];
-    const volume = candles1d.reduce((acc, candle) => acc + candle[5], 0);
-
-    const priceChange1d =
-      candles1d.length > 1
-        ? ((candles1d[candles1d.length - 1][4] - candles1d[0][1]) /
-            candles1d[0][1]) *
-          100
-        : 0;
-    const priceChange7d =
-      candles7d.length > 1
-        ? ((candles7d[candles7d.length - 1][4] - candles7d[0][1]) /
-            candles7d[0][1]) *
-          100
-        : 0;
-    const priceChange30d =
-      candles30d.length > 1
-        ? ((candles30d[candles30d.length - 1][4] - candles30d[0][1]) /
-            candles30d[0][1]) *
-          100
-        : 0;
 
     const enhancedCoin: Coin = {
       ...coin,
       currentPrice,
-      priceChange1d: priceChange1d.toFixed(2),
-      priceChange7d: priceChange7d.toFixed(2),
-      priceChange30d: priceChange30d.toFixed(2),
+      priceChange24h,
       volume,
     };
+
+    const formattedVolume = formatVolume(enhancedCoin.volume ?? 0);
 
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -135,10 +99,8 @@ async function fetchCoinData(
       enhancedCoin.coin_name
     }</a></td>
       <td>$${enhancedCoin.currentPrice?.toFixed(2) || "N/A"}</td>
-      <td>${enhancedCoin.priceChange1d}</td>
-      <td>${enhancedCoin.priceChange7d}</td>
-      <td>${enhancedCoin.priceChange30d}</td>
-      <td>$${enhancedCoin.volume?.toLocaleString() || "N/A"}</td>
+      <td>${enhancedCoin.priceChange24h}%</td>
+      <td>$${formattedVolume}</td>
     `;
     tableBody.appendChild(row);
   } catch (error: any) {
@@ -161,6 +123,18 @@ async function fetchCoinData(
         error
       );
     }
+  }
+}
+
+function formatVolume(volume: number): string {
+  if (volume >= 1e12) {
+    return (volume / 1e12).toFixed(1) + "T";
+  } else if (volume >= 1e9) {
+    return (volume / 1e9).toFixed(1) + "B";
+  } else if (volume >= 1e6) {
+    return (volume / 1e6).toFixed(1) + "M";
+  } else {
+    return volume.toFixed(0);
   }
 }
 
