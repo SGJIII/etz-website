@@ -74,7 +74,7 @@ async function fetchCoinData(
       currentPrice = parseFloat(response.data.price);
       volume = parseFloat(response.data.volume);
       const open = parseFloat(response.data.open);
-      const last = parseFloat(response.data.last);
+      const last = parseFloat(response.data.price); // last price is the current price
 
       if (open && last) {
         priceChange24h = (((last - open) / open) * 100).toFixed(2);
@@ -165,6 +165,12 @@ export async function getCoins(): Promise<void> {
     }
     addToQueue(() => fetchCoinData(coin, tableBody));
   });
+
+  // Ensure USDC is included
+  const usdc = coins.find((coin) => coin.coin_name === "USD Coin");
+  if (usdc) {
+    addToQueue(() => fetchCoinData(usdc, tableBody));
+  }
 
   // Wait until all tasks are processed
   while (isProcessingQueue || requestQueue.size > 0) {
