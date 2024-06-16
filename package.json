@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "node load-env.js && parcel serve  --open --host localhost --port 5140",
-    "build": "rimraf build && parcel build --dist-dir build && cp -R src/* build/",
+    "clean": "rimraf node_modules build .parcel-cache && yarn cache clean && npm cache clean --force",
+    "build": "yarn clean && rimraf build && parcel build --dist-dir build && cp -R src/* build/",
     "serve": "LOCAL_DEV=true node netlify/functions/server.js",
     "prepare": "husky install",
     "check:tsc": "tsc --noemit -t es5 ./src/**/*.ts",
