@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-  <script src="/js/services/lottie.js" type="module"></script>
+  <script src="../js/services/lottie.js" type="module"></script>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <link rel="stylesheet" href="/styles/index.css" />
-  <link rel="stylesheet" href="/styles/index.desktop.css" />
-  <link rel="stylesheet" href="/styles/index.mobile.css" />
-  <link rel="stylesheet" href="/styles/index.tablet.css" />
-  <link rel="stylesheet" href="/styles/coins.css" />
+  <link rel="stylesheet" href="../styles/index.css" />
+  <link rel="stylesheet" href="../styles/index.desktop.css" />
+  <link rel="stylesheet" href="../styles/index.mobile.css" />
+  <link rel="stylesheet" href="../styles/index.tablet.css" />
+  <link rel="stylesheet" href="../styles/coins.css" />
   <title><%= title %></title>
   <style id="antiClickjack">
     body {
@@ -43,7 +43,7 @@
   <meta name="twitter:title" content="<%= title %>" />
   <meta name="twitter:image" content="https://etzsoft.com/frame.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <script src="/js/version.js" type="module"></script>
+  <script src="../js/version.js" type="module"></script>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script type="module">
     if (process.env.BUILD_STATUS === "PRODUCTION") {
@@ -62,15 +62,15 @@
 </head>
 <body>
   <div id="loader-container">
-    <include src="/components/loader/index.html"></include>
+    <include src="../components/loader/index.html"></include>
   </div>
   <canvas class="webgl" name-mobile-model></canvas>
-  <script src="/js/notification.ts" type="module"></script>
-  <include src="/components/header-section/index.html" locals='{"title": "<%= title %>", "description": ""}'></include>
+  <script src="../js/notification.ts" type="module"></script>
+  <include src="../components/header-section/index.html" locals='{"title": "<%= title %>", "description": ""}'></include>
   <article id="content" class="__section __sidePadding ContentSection" style="height: auto">
     <%= body %>
   </article>
-  <include src="/components/footer/index.html" locals="{}"></include>
+  <include src="../components/footer/index.html" locals="{}"></include>
   <script type="module">
     function setUpSizePage() {
       const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
@@ -82,8 +82,8 @@
     setUpSizePage();
     window.addEventListener("resize", setUpSizePage);
   </script>
-  <script type="module" src="/js/links/links.ts" async></script>
-  <script type="module" src="/js/header-menu.ts" async></script>
-  <script type="module" src="/js/index.ts" async></script>
+  <script type="module" src="../js/links/links.ts" async></script>
+  <script type="module" src="../js/header-menu.ts" async></script>
+  <script type="module" src="../js/index.ts" async></script>
 </body>
 </html>
