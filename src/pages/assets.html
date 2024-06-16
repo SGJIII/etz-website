@@ -83,12 +83,12 @@
   </head>
   <body>
     <div id="loader-container">
-      <include src="../components/loader/index.html"></include>
+      <include src="./components/loader/index.html"></include>
     </div>
     <canvas class="webgl" name-mobile-model></canvas>
     <script src="../js/notification.ts" type="module"></script>
     <include
-      src="../components/header-section/index.html"
+      src="./components/header-section/index.html"
       locals='{"title": "<%= title %>", "description": ""}'></include>
     <article
       id="content"
@@ -96,7 +96,7 @@
       style="height: auto">
       <%= body %>
     </article>
-    <include src="../components/footer/index.html" locals="{}"></include>
+    <include src="./components/footer/index.html" locals="{}"></include>
     <script type="module">
       function setUpSizePage() {
         const vw = Math.max(
