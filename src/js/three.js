@@ -5,7 +5,6 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { detectDevice } from "./utils/detectDevice";
 import { AddEventOrientationChange } from "./utils/addEventOrientationchange";
-import { AddEventOrientationChange } from "./utils/addEventOrientationchange";
 import { getElementOffsetTop } from "./utils/getElementOffsetTop";
 import { disableBodyScroll, enableBodyScroll } from "./utils/scroll";
 import { launchSlider } from "./benefits-slider";
