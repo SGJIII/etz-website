@@ -1,0 +1,7 @@
+<%- include('layout', { title: coin.coin_name + ' IRA Details', description: 'How to avoid taxes on ' + coin.coin_name + ' trading' }) %>
+
+<div class="coin-page">
+  <h1><%= coin.coin_name %> (<%= coin.coin_base %>) IRA</h1>
+  <p><%= coin.ai_content %></p>
+  <img src="<%= coin.logo_url %>" alt="<%= coin.coin_name %>">
+</div>
