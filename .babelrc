@@ -1,5 +1,7 @@
 {
     "presets": ["@babel/preset-env"],
-    "ignore": ["node_modules/openai/**"]
+    "ignore": [
+      "node_modules/openai/**"
+    ]
   }
   

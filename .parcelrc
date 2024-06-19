@@ -1,3 +1,13 @@
 {
-  "extends": ["@parcel/config-default"]
+  "extends": "@parcel/config-default",
+  "transformers": {
+    "*.js": [
+      "@parcel/transformer-babel"
+    ]
+  },
+  "resolvers": [
+    "./noop-resolver.js",
+    "...",
+    "@parcel/resolver-default"
+  ]
 }
