@@ -1,7 +1,7 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 require("dotenv").config({ path: "./.env.staging" });
 const axios = require("axios");
-const { supabase } = require("../lib/supabase");
+const { supabase } = require("../src/lib/supabase");
 
 // Delay function to handle rate limiting
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
