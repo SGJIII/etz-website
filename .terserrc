@@ -1,0 +1,16 @@
+{
+  "ecma": 2015,
+  "compress": {
+    "ecma": 2015,
+    "keep_classnames": true,
+    "keep_fnames": true
+  },
+  "mangle": {
+    "keep_classnames": true,
+    "keep_fnames": true
+  },
+  "output": {
+    "ecma": 2015
+  },
+  "exclude": ["node_modules/openai/**"]
+}

@@ -1,13 +1,13 @@
 {
   "extends": "@parcel/config-default",
   "transformers": {
+    "*.ejs": ["parcel-transformer-ejs"],
     "*.js": [
-      "@parcel/transformer-babel"
+      "@parcel/transformer-babel",
+      {
+        "exclude": ["openai"]
+      }
     ]
   },
-  "resolvers": [
-    "./noop-resolver.js",
-    "...",
-    "@parcel/resolver-default"
-  ]
+  "reporters": ["@parcel/reporter-static-files-copy"]
 }
