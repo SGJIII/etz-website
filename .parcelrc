@@ -1,13 +1,7 @@
 {
-  "extends": "@parcel/config-default",
+  "extends": ["@parcel/config-default"],
   "transformers": {
-    "*.ejs": ["parcel-transformer-ejs"],
-    "*.js": [
-      "@parcel/transformer-babel",
-      {
-        "exclude": ["openai"]
-      }
-    ]
+    "*.ejs": ["parcel-transformer-ejs"]
   },
-  "reporters": ["@parcel/reporter-static-files-copy"]
+  "reporters": ["parcel-reporter-static-files-copy"]
 }
