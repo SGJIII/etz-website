@@ -3,14 +3,16 @@
   "version": "v1.1.21",
   "private": true,
   "scripts": {
-    "dev": "node load-env.js && parcel serve  --open --host localhost --port 5140",
-    "build": "rimraf build && parcel build src/pages/*.ejs src/**/*.html src/**/*.js src/**/*.css --dist-dir build && mkdir -p build/src/ && cp -R src/* build/src/ && cp -R netlify/functions build/netlify/functions/ && cp src/lib/supabase.js build/src/lib/",
+    "dev": "node load-env.js && parcel serve --open --host localhost --port 5140",
+    "build:home": "rimraf build/home && parcel build src/pages/index.html --dist-dir build/home && mkdir -p build/src/ && cp -R src/* build/src/ && cp -R netlify/functions build/netlify/functions/",
+    "build:coins": "rimraf build/coins && parcel build src/pages/*.ejs src/**/*.html src/**/*.js src/**/*.css --dist-dir build/coins --no-scope-hoist && mkdir -p build/src/ && cp -R src/* build/src/ && cp -R netlify/functions build/netlify/functions/ && cp src/lib/supabase.js build/src/lib/",
+    "build": "yarn build:home && yarn build:coins",
     "serve": "LOCAL_DEV=true node netlify/functions/server.js",
     "prepare": "husky install",
-    "check:tsc": "tsc --noemit -t es5 ./src/**/*.ts",
+    "check:tsc": "tsc --noemit",
     "check:lint": "eslint ./src --ext .js,.ts",
     "check:format": "prettier --ignore-path .gitignore --write \"./src/**/*.+(js|ts|json|css|html)\""
-  },
+},
   "lint-staged": {
     "./src/**/*.{ts,js}": [
       "eslint --fix"
@@ -31,6 +33,22 @@
     "src/pages/assets.html",
     "src/pages/[coin].html"
   ],
+  "posthtml": {
+    "plugins": {
+      "posthtml-expressions": {
+        "locals": {
+          "title": "Default Title",
+          "description": "Default Description",
+          "coin": {
+            "coin_name": "Default Coin",
+            "coin_base": "N/A",
+            "ai_content": "N/A",
+            "logo_url": "src/assets/logo-dark.svg"
+          }
+        }
+      }
+    }
+  },
   "devDependencies": {
     "@alienlebarge/stylelint-config": "^3.1.6",
     "@babel/core": "^7.24.7",
@@ -67,6 +85,7 @@
     "parcel-transformer-ejs": "^1.0.1",
     "postcss-bem-linter": "^4.0.1",
     "posthtml-include": "^1.7.3",
+    "posthtml-expressions": "^1.5.2",
     "prettier": "2.6.2",
     "process": "^0.11.10",
     "proxy-agent": "^6.4.0",

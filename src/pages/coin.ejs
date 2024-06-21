@@ -1,4 +1,10 @@
-<%- include('layout', { title: coin.coin_name + ' IRA Details', description: 'How to avoid taxes on ' + coin.coin_name + ' trading' }) %>
+<%
+  var title = typeof title !== 'undefined' ? title : 'Default Title';
+  var description = typeof description !== 'undefined' ? description : 'Default Description';
+  var coin = typeof coin !== 'undefined' ? coin : { coin_name: 'Default Coin', coin_base: 'N/A', ai_content: 'N/A', logo_url: '../assets/logo-dark.svg' };
+  var body = typeof body !== 'undefined' ? body : ''; // Ensure body is defined
+%>
+<% include('layout', { title: title, description: description, body: body, coin: coin }) %>
 
 <div class="coin-page">
   <h1><%= coin.coin_name %> (<%= coin.coin_base %>) IRA</h1>

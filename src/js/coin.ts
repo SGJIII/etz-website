@@ -13,7 +13,7 @@ interface Coin {
 }
 
 axiosRetry(axios, {
-  retries: 1, // Limit retries to 1
+  retries: 1,
   retryDelay: (retryCount) => {
     return retryCount * 1000;
   },

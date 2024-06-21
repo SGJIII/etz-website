@@ -21,6 +21,7 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.js", "./src/**/*.jsx"],
-  "exclude": ["node_modules", "**/*.config.js", "./js/**/*.js", "src/assets", "./src/js/version.js, src/js/three.js"]
+  "exclude": ["node_modules", "**/*.config.js", "./js/**/*.js", "src/assets", "./src/js/version.js", "src/js/three.js"]
 }
+
 

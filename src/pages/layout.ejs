@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-  <script src="./js/services/lottie.js" type="module"></script>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -10,27 +9,9 @@
   <link rel="stylesheet" href="../styles/index.mobile.css" />
   <link rel="stylesheet" href="../styles/index.tablet.css" />
   <link rel="stylesheet" href="../styles/coins.css" />
-<title><%= title %></title>
-  <style id="antiClickjack">
-    body {
-      display: none !important;
-    }
-  </style>
-  <script type="text/javascript">
-    if (self === top) {
-      var antiClickjack = document.getElementById("antiClickjack");
-      antiClickjack.parentNode.removeChild(antiClickjack);
-    } else {
-      top.location = self.location;
-    }
-  </script>
-  <link rel="shortcut icon" href="https://etzsoft.com/favicon.ico" type="image/x-icon" />
-  <link rel="apple-touch-icon" sizes="16x16" href="https://etzsoft.com/favicon-16.png" />
-  <link rel="apple-touch-icon" sizes="32x32" href="https://etzsoft.com/favicon-32.png" />
-  <link rel="apple-touch-icon" sizes="48x48" href="https://etzsoft.com/favicon-48.png" />
-  <link rel="apple-touch-icon" sizes="256x256" href="https://etzsoft.com/favicon-256.png" />
-  <meta property="og:title" content="<%= title %>" />
-  <meta property="og:description" content="<%= description %>" />
+  <title><%= typeof title !== 'undefined' ? title : 'Default Title' %></title>
+  <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Default Title' %>" />
+  <meta property="og:description" content="<%= typeof description !== 'undefined' ? description : 'Default Description' %>" />
   <meta property="og:site_name" content="ETZ" />
   <meta property="og:url" content="https://etzsoft.com/coin/index.html" />
   <meta property="og:type" content="website" />
@@ -40,38 +21,34 @@
   <meta property="og:image:type" content="image/png" />
   <meta property="og:image:height" content="504" />
   <meta property="og:image:width" content="968" />
-  <meta name="twitter:title" content="<%= title %>" />
+  <meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'Default Title' %>" />
   <meta name="twitter:image" content="https://etzsoft.com/frame.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <script src="./js/version.js" type="module"></script>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script type="module">
-    if (process.env.BUILD_STATUS === "PRODUCTION") {
-      var script = document.createElement("script");
-      script.async = true;
-      script.src="https://www.googletagmanager.com/gtag/js?id=G-JNSD1B12W2";
-      script.onload = function () {
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag("js", new Date());
-        gtag("config", "G-JNSD1B12W2");
-      };
-      document.head.appendChild(script);
-    }
-  </script>
+  <script src="../js/version.js" type="module"></script>
+  <link rel="shortcut icon" href="https://etzsoft.com/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" sizes="16x16" href="https://etzsoft.com/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="32x32" href="https://etzsoft.com/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="48x48" href="https://etzsoft.com/favicon-48.png" />
+  <link rel="apple-touch-icon" sizes="256x256" href="https://etzsoft.com/favicon-256.png" />
 </head>
 <body>
   <canvas class="webgl" name-mobile-model></canvas>
-  <script src="./js/notification.ts" type="module"></script>
-  <include src="./components/header-section/index.html" locals='{"title": "<%= title %>", "description": ""}'></include>
+  <script type="module" src="../js/notification.ts"></script>
+  <include src="components/header-section/index.html" locals='{ "title": title, "description": description }'></include>
   <article id="content" class="__section __sidePadding ContentSection" style="height: auto">
-    <%= body %>
+    <%= typeof body !== 'undefined' ? body : '' %>
   </article>
-  <include src="./components/header-section/index.html" locals="{}"></include>
+  <include src="components/header-section/index.html" locals="{}"></include>
   <script type="module">
     function setUpSizePage() {
-      const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-      const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+      const vw = Math.max(
+        document.documentElement.clientWidth || 0,
+        window.innerWidth || 0
+      );
+      const vh = Math.max(
+        document.documentElement.clientHeight || 0,
+        window.innerHeight || 0
+      );
       document.documentElement.style.setProperty("--vw", `${vw}px`);
       document.documentElement.style.setProperty("--vh", `${vh}px`);
       document.documentElement.style.setProperty("--vh-px", `${vh}px`);
@@ -79,8 +56,8 @@
     setUpSizePage();
     window.addEventListener("resize", setUpSizePage);
   </script>
-  <script type="module" src="./js/links/links.ts" async></script>
-  <script type="module" src="./js/header-menu.ts" async></script>
-  <script type="module" src="./js/index.ts" async></script>
+  <script type="module" src="../js/links/links.ts" async></script>
+  <script type="module" src="../js/header-menu.ts" async></script>
+  <script type="module" src="../js/index.ts" async></script>
 </body>
 </html>
