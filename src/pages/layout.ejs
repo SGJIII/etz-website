@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../styles/index.mobile.css" />
   <link rel="stylesheet" href="../styles/index.tablet.css" />
   <link rel="stylesheet" href="../styles/coins.css" />
-  <title><%= title || 'Default Title' %></title>
+<title><%= title %></title>
   <style id="antiClickjack">
     body {
       display: none !important;
@@ -29,8 +29,8 @@
   <link rel="apple-touch-icon" sizes="32x32" href="https://etzsoft.com/favicon-32.png" />
   <link rel="apple-touch-icon" sizes="48x48" href="https://etzsoft.com/favicon-48.png" />
   <link rel="apple-touch-icon" sizes="256x256" href="https://etzsoft.com/favicon-256.png" />
-  <meta property="og:title" content="<%= title || 'Default Title'%> />
-  <meta property="og:description" content="<%= description || 'Default Description' %>" />
+  <meta property="og:title" content="<%= title %>" />
+  <meta property="og:description" content="<%= description %>" />
   <meta property="og:site_name" content="ETZ" />
   <meta property="og:url" content="https://etzsoft.com/coin/index.html" />
   <meta property="og:type" content="website" />
@@ -40,7 +40,7 @@
   <meta property="og:image:type" content="image/png" />
   <meta property="og:image:height" content="504" />
   <meta property="og:image:width" content="968" />
-  <meta name="twitter:title" content="<%= title || 'Default Title' %>" />
+  <meta name="twitter:title" content="<%= title %>" />
   <meta name="twitter:image" content="https://etzsoft.com/frame.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <script src="./js/version.js" type="module"></script>
@@ -63,7 +63,7 @@
 <body>
   <canvas class="webgl" name-mobile-model></canvas>
   <script src="./js/notification.ts" type="module"></script>
-  <include src="./components/header-section/index.html" locals='{"title": "<%= title || "Default Title" %>, "description": "<%= description || "Default Description" %>}'></include>
+  <include src="./components/header-section/index.html" locals='{"title": "<%= title %>", "description": ""}'></include>
   <article id="content" class="__section __sidePadding ContentSection" style="height: auto">
     <%= body %>
   </article>

@@ -8,10 +8,6 @@ const { supabase } = require('../../src/lib/supabase'); // Adjust the path as ne
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Set the view engine to ejs
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '../../src/pages'));
-
 // Serve static files from the dist directory
 app.use(express.static(path.join(__dirname, '../../dist')));
 
@@ -39,17 +35,29 @@ app.get('/asset/:coin', async (req, res) => {
     return;
   }
 
-  // Render the EJS template with coin data
-  res.render('coin', {
-    coin: {
-      coin_name: coin.coin_name || 'Default Coin Name',
-      coin_base: coin.coin_base || 'Default Coin Base',
-      ai_content: coin.ai_content || 'Default AI Content',
-      logo_url: coin.logo_url || '/default-logo.png'
-    },
-    title: coin.coin_name ? coin.coin_name + ' IRA Details' : 'Default Title',
-    description: coin.coin_name ? 'How to avoid taxes on ' + coin.coin_name + ' trading' : 'Default Description'
-  });
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="en-US">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <title>${coin.coin_name} IRA Details - How to avoid taxes on ${coin.coin_name} trading | ETZ Soft </title>
+        <link rel="stylesheet" href="/styles/index.css">
+        <link rel="stylesheet" href="/styles/index.desktop.css">
+        <link rel="stylesheet" href="/styles/index.mobile.css">
+        <link rel="stylesheet" href="/styles/index.tablet.css">
+      </head>
+      <body>
+        <div class="coin-page">
+          <h1>${coin.coin_name} (${coin.coin_base}) IRA</h1>
+          <p>${coin.ai_content}</p>
+          <img src="${coin.logo_url}" alt="${coin.coin_name}">
+        </div>
+      </body>
+    </html>
+  `;
+
+  res.send(htmlContent);
 });
 
 // Export the serverless handler for Netlify

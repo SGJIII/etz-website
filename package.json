@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node load-env.js && parcel serve  --open --host localhost --port 5140",
-    "build": "rimraf build && parcel build src/pages/*.ejs src/**/*.html src/**/*.js src/**/*.css --dist-dir build && mkdir -p build/src/ && cp -R src/* build/src/",
+    "build": "rimraf build && parcel build src/pages/*.ejs src/**/*.html src/**/*.js src/**/*.css --dist-dir build && mkdir -p build/src/ && cp -R src/* build/src/ && cp -R netlify/functions build/netlify/functions/ && cp src/lib/supabase.js build/src/lib/",
     "serve": "LOCAL_DEV=true node netlify/functions/server.js",
     "prepare": "husky install",
     "check:tsc": "tsc --noemit -t es5 ./src/**/*.ts",
