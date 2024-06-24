@@ -3,18 +3,16 @@
   "version": "v1.1.21",
   "private": true,
   "scripts": {
-    "prebuild:coins": "node scripts/move-benefits-slider.js move",
-    "postbuild:coins": "node scripts/move-benefits-slider.js restore",
-    "dev": "node load-env.js && parcel serve --open --host localhost --port 5140",
-    "build:home": "rimraf build/home && parcel build src/pages/index.html --dist-dir build/home --no-scope-hoist --log-level verbose && mkdir -p build/src/ && cp -R src/* build/src/",
-    "build:coins": "rimraf build/coins && tsc --project tsconfig.build.json && parcel build src/pages/*.ejs src/**/*.html src/**/*.js src/**/*.css --dist-dir build/coins --no-scope-hoist --log-level verbose && mkdir -p build/src/ && mkdir -p build/netlify/functions && cp -R src/* build/src/ && cp -R netlify/functions build/netlify/functions/ && cp src/lib/supabase.js build/src/lib/ && yarn postbuild:coins",
-    "build": "yarn build:home && yarn build:coins && mkdir -p build/deploy && cp -R build/home/* build/deploy && cp -R build/coins/* build/deploy",
+    "dev": "node load-env.js && parcel serve src/pages/index.html --open --host localhost --port 5140",
+    "build:home": "rimraf build && parcel build src/pages/index.html --dist-dir build --no-scope-hoist --log-level verbose && mkdir -p build/src/ && cp -R src/* build/src/",
+    "build:coins": "tsc --project tsconfig.build.json && parcel build src/pages/*.ejs src/**/*.html src/**/*.js src/**/*.css --dist-dir build --no-scope-hoist --log-level verbose && mkdir -p build/src/ && mkdir -p build/netlify/functions && cp -R src/* build/src/ && cp -R netlify/functions build/netlify/functions/ && cp src/lib/supabase.js build/src/lib/",
+    "build": "yarn build:home && yarn build:coins && mkdir -p build/deploy && cp -R build/* build/deploy",
     "serve": "LOCAL_DEV=true node netlify/functions/server.js",
     "prepare": "husky install",
     "check:tsc": "tsc --noemit",
     "check:lint": "eslint ./src --ext .js,.ts",
     "check:format": "prettier --ignore-path .gitignore --write \"./src/**/*.+(js|ts|json|css|html)\""
-  },
+},
   "lint-staged": {
     "./src/**/*.{ts,js}": [
       "eslint --fix"
