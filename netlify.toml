@@ -1,5 +1,7 @@
 [build]
-  functions = "netlify/functions"
+  command = "yarn build"
+  publish = "build/src"
+  functions = "build/netlify/functions"
 
 [[redirects]]
   from = "/asset/*"
