@@ -3,7 +3,7 @@
   "transformers": {
     "*.ejs": ["parcel-transformer-ejs"],
     "*.js": ["@parcel/transformer-babel"],
-    "*.ts": ["@parcel/transformer-ts"]
+    "*.ts": ["@parcel/transformer-typescript-tsc"]
   },
   "reporters": ["parcel-reporter-static-files-copy"]
 }

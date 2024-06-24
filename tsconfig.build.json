@@ -2,9 +2,9 @@
     "extends": "./tsconfig.json",
     "compilerOptions": {
       "noEmit": false,
-      "outDir": "./dist"
+      "outDir": "./dist",
+      "module": "esnext"
     },
     "include": ["./src/**/*.ts", "./src/**/*.tsx"],
-    "exclude": ["node_modules", "dist", "build"]
+    "exclude": ["node_modules", "dist", "build", "src/js/benefits-slider/index.ts"]
   }
-  

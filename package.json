@@ -3,16 +3,17 @@
   "version": "v1.1.21",
   "private": true,
   "scripts": {
+    "prebuild:coins": "node scripts/remove-benefits-slider.js",
     "dev": "node load-env.js && parcel serve --open --host localhost --port 5140",
-    "build:home": "rimraf build/home && parcel build src/pages/index.html --dist-dir build/home && mkdir -p build/src/ && cp -R src/* build/src/ && cp -R netlify/functions build/netlify/functions/",
-    "build:coins": "rimraf build/coins && parcel build src/pages/*.ejs src/**/*.html src/**/*.js src/**/*.css --dist-dir build/coins --no-scope-hoist && mkdir -p build/src/ && cp -R src/* build/src/ && cp -R netlify/functions build/netlify/functions/ && cp src/lib/supabase.js build/src/lib/",
+    "build:home": "rimraf build/home && parcel build src/pages/index.html --dist-dir build/home --no-scope-hoist && mkdir -p build/src/ && cp -R src/* build/src/ && cp -R netlify/functions build/netlify/functions/",
+    "build:coins": "rimraf build/coins && tsc --project tsconfig.build.json && parcel build src/pages/*.ejs src/**/*.html src/**/*.js src/**/*.css --dist-dir build/coins --no-scope-hoist && mkdir -p build/src/ && cp -R src/* build/src/ && cp -R netlify/functions build/netlify/functions/ && cp src/lib/supabase.js build/src/lib/",
     "build": "yarn build:home && yarn build:coins",
     "serve": "LOCAL_DEV=true node netlify/functions/server.js",
     "prepare": "husky install",
     "check:tsc": "tsc --noemit",
     "check:lint": "eslint ./src --ext .js,.ts",
     "check:format": "prettier --ignore-path .gitignore --write \"./src/**/*.+(js|ts|json|css|html)\""
-},
+  },
   "lint-staged": {
     "./src/**/*.{ts,js}": [
       "eslint --fix"
@@ -84,8 +85,8 @@
     "parcel-reporter-static-files-copy": "^1.5.3",
     "parcel-transformer-ejs": "^1.0.1",
     "postcss-bem-linter": "^4.0.1",
-    "posthtml-include": "^1.7.3",
     "posthtml-expressions": "^1.5.2",
+    "posthtml-include": "^1.7.3",
     "prettier": "2.6.2",
     "process": "^0.11.10",
     "proxy-agent": "^6.4.0",
@@ -100,6 +101,7 @@
     "yup-phone": "^1.3.2"
   },
   "dependencies": {
+    "@parcel/transformer-typescript-tsc": "^2.12.0",
     "@supabase/supabase-js": "^2.43.4",
     "axios-retry": "^4.4.0",
     "cheerio": "^1.0.0-rc.12",
