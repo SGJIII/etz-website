@@ -1,13 +1,14 @@
 import { easeInOutQuad } from "../utils/easeInOutQuad";
 import { AddEventOrientationChange } from "../utils/addEventOrientationchange";
 
-type TimeoutId = string | number | NodeJS.Timeout | undefined;
+type TimeoutId = ReturnType<typeof setTimeout> | undefined;
+
 class BenefitsSlider {
   static activeSlideIdx = 0;
   static timeSlideWithoutPause = 3000;
   static timeSlideWithPause = 2000;
-  static __idSliderInterval: TimeoutId = 0;
-  static __idSliderClick: TimeoutId = 0;
+  static __idSliderInterval: TimeoutId = undefined;
+  static __idSliderClick: TimeoutId = undefined;
   static isLaunchSlider = false;
   static dots: Array<HTMLElement> | null = [];
   static prevIdActiveSlide = 0;
@@ -28,7 +29,6 @@ class BenefitsSlider {
     if (BenefitsSlider.activeSlideIdx > BenefitsSlider.dots.length - 1) {
       BenefitsSlider.activeSlideIdx = 0;
     }
-    // BenefitsSlider.dots[BenefitsSlider.activeSlideIdx]?.click();
     BenefitsSlider.changeActiveSlide(BenefitsSlider.activeSlideIdx);
   }
 
@@ -41,7 +41,7 @@ class BenefitsSlider {
 
   private createDots() {
     BenefitsSlider.slides = document.querySelectorAll<HTMLElement>(
-      "[ name-benefits-slide]"
+      "[name-benefits-slide]"
     );
 
     BenefitsSlider.dotsContainder = document.querySelector(
