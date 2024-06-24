@@ -8,3 +8,10 @@
   to = "/.netlify/functions/server"
   status = 200
   force = true
+
+[dev]
+  framework = "#custom"
+  command = "yarn dev"
+  targetPort = 1234
+  port = 8888
+  publish = "build/src"

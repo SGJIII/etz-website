@@ -3,16 +3,16 @@
   "version": "v1.1.21",
   "private": true,
   "scripts": {
-    "dev": "node load-env.js && parcel serve src/pages/index.html --open --host localhost --port 5140",
+    "dev": "node load-env.js && parcel serve build/src/pages/index.html --open --host localhost --port 1234",
     "build:home": "rimraf build && parcel build src/pages/index.html --dist-dir build && mkdir -p build/src && cp -R src/* build/src/",
-    "build:coins": "tsc --project tsconfig.build.json && parcel build src/pages/*.ejs src/**/*.html src/**/*.js src/**/*.css --dist-dir build && mkdir -p build/src && cp -R src/* build/src/ && mkdir -p build/netlify/functions && cp netlify/functions/server.js build/netlify/functions/",
+    "build:coins": "tsc --project tsconfig.build.json && parcel build src/pages/*.ejs src/**/*.html src/**/*.js src/**/*.css --dist-dir build && mkdir -p build/src && mkdir -p build/netlify/functions && cp -R src/* build/src/ && cp netlify/functions/server.js build/netlify/functions/",
     "build": "yarn build:home && yarn build:coins",
     "serve": "LOCAL_DEV=true node netlify/functions/server.js",
     "prepare": "husky install",
     "check:tsc": "tsc --noemit",
     "check:lint": "eslint ./src --ext .js,.ts",
     "check:format": "prettier --ignore-path .gitignore --write \"./src/**/*.+(js|ts|json|css|html)\""
-},
+  },
   "lint-staged": {
     "./src/**/*.{ts,js}": [
       "eslint --fix"
