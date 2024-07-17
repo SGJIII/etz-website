@@ -1,12 +1,15 @@
-name: Production - Deploy to AWS
+name: QA - Deploy to AWS
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - deploy_to_qa
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    environment: ${{vars.PROD_ENV_NAME}}
+    environment: ${{vars.QA_ENV_NAME}}
 
     steps:
     - uses: actions/checkout@v4
