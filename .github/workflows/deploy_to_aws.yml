@@ -1,10 +1,13 @@
-name: Deploy to AWS
+name: Production - Deploy to AWS
 
 on: workflow_dispatch
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
+    environment: ${{vars.PROD_ENV_NAME}}
+
     steps:
     - uses: actions/checkout@v4
       with:
