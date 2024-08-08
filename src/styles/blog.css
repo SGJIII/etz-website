@@ -1,0 +1,127 @@
+/* Importing necessary base styles */
+@import url("./fonts/index.css");
+@import url("./theme/typography.css");
+@import url("./theme/color-scheme.css");
+
+/* General body styles for the blog page */
+body {
+  font-family: Rubik, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+  overflow: auto; /* Ensure body is scrollable */
+}
+
+.HeaderSection {
+  height: 84vh;
+}
+
+/* Blog page container */
+.blog-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  display: block;
+  visibility: visible;
+}
+
+/* Blog post styles for listing page */
+.blog-post {
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: block;
+  visibility: visible;
+}
+
+.blog-post h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+}
+
+.blog-post p {
+  font-size: 16px;
+  color: #555;
+}
+
+/* Blog post link styles */
+.blog-post a {
+  color: #226dff;
+  text-decoration: none;
+}
+
+.blog-post a:hover {
+  text-decoration: underline;
+}
+
+/* Individual blog post styles */
+.blog-post-content {
+  background-color: #fff;
+  padding: 40px;
+  margin: 20px 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.blog-post-content h1 {
+  font-size: 30px;
+  font-weight: bold;
+  margin-top: 0;
+}
+
+.blog-post-content h2 {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.blog-post-content h3 {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.blog-post-content p {
+  font-size: 18px;
+  color: #333;
+  line-height: 1.6;
+}
+
+.blog-post-content ul,
+.blog-post-content ol {
+  margin-left: 20px;
+  padding-left: 20px;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .blog-container {
+    padding: 10px;
+  }
+
+  .blog-post,
+  .blog-post-content {
+    padding: 20px;
+  }
+
+  .blog-post h2,
+  .blog-post-content h1,
+  .blog-post-content h2,
+  .blog-post-content h3 {
+    font-size: 20px;
+  }
+
+  .blog-post p,
+  .blog-post-content p,
+  .blog-post-content ul,
+  .blog-post-content ol {
+    font-size: 16px;
+  }
+}

@@ -1,0 +1,42 @@
+/* Custom styles for Markdown-rendered headings */
+.coin-content h1 {
+  font-size: 30px; /* Adjust the font size for <h1> */
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  font-family: "Rubik";
+  line-height: 1em;
+}
+
+.coin-content h2 {
+  font-size: 26px !important; /* Adjust the font size for <h2> */
+  font-weight: bold;
+  margin-top: 1.25em;
+  margin-bottom: 0.5em;
+  font-family: "Rubik";
+}
+
+.coin-content h3 {
+  font-size: 22px; /* Adjust the font size for <h3> */
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-family: "Rubik";
+}
+
+.coin-content p {
+  font-size: 18px;
+  font-family: "Rubik";
+  line-height: 28px;
+}
+
+.coin-content li {
+  font-size: 18px;
+  line-height: 28px;
+  font-family: "Rubik";
+}
+
+.coin-content h4 {
+  font-size: 16px;
+}
+/* Add more styles for other heading tags if needed */
