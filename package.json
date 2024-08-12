@@ -1,6 +1,6 @@
 {
   "name": "etz",
-  "version": "v1.1.21",
+  "version": "v1.1.22",
   "private": true,
   "scripts": {
     "prebuild": "mkdir -p dist && cp src/_redirects dist/_redirects && node build.js && cp src/robots.txt dist/robots.txt",
