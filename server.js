@@ -30,7 +30,7 @@ const injectMetaData = (html, title, description, content) => {
 };
 
 // Serve coin pages
-app.get('/:coinName.html', (req, res) => {
+app.get('/coin/:coinName.html', (req, res) => {
   const coinName = decodeURIComponent(req.params.coinName);
   const filePath = path.join(__dirname, 'dist', 'coin.html');
   

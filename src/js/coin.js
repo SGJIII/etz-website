@@ -58,7 +58,10 @@ export const renderCoinPage = async () => {
     .setAttribute("content", `Learn more about ${coinData.coin_name}`);
   document
     .querySelector("meta[property='og:url']")
-    .setAttribute("content", `https://etzsoft.com/${coinData.coin_name}.html`);
+    .setAttribute(
+      "content",
+      `https://etzsoft.com/coin/${coinData.coin_name}.html`
+    );
   document
     .querySelector("meta[name='twitter:title']")
     .setAttribute("content", `${coinData.coin_name} IRAs`);
