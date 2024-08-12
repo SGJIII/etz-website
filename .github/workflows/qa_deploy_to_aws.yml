@@ -36,15 +36,13 @@ jobs:
     - run: aws s3 sync ./build s3://${{vars.AWS_S3_BUCKET}}/ --delete
     - run: aws cloudfront create-invalidation --distribution-id ${{vars.AWS_CLOUDFRONT_DISTR}} --paths "/*"
 
-    - id: getting_package_json_content
-      name: Get app version
-      run: |
-        content=`cat ./package.json`
-        content="${content//'%'/'%25'}"
-        content="${content//$'\n'/'%0A'}"
-        content="${content//$'\r'/'%0D'}"
-        echo "::set-output name=packageJson::$content"
-        
+    - name: Get app version
+      id: getting_app_version
+      uses: ActionsTools/read-json-action@main
+      with:
+        file_path: "package.json"
+        prop_path: "version"
+
     - name: Send complete message to Slack channel
       uses: slackapi/slack-github-action@v1.26.0
       with:
@@ -52,7 +50,7 @@ jobs:
           {
             "channel": "#builds",
             "username": "Server Bulder bot",
-            "text": "Landing ${{vars.QA_ENV_NAME}} frontend updated to ${{fromJson(steps.getting_package_json_content.outputs.packageJson).version}}: ${{vars.APP_URL}}",
+            "text": "Landing ${{vars.QA_ENV_NAME}} frontend updated to ${{steps.getting_app_version.outputs.value}}: ${{vars.APP_URL}}",
             "icon_emoji": ":floppy_disk:"
           }
       env:

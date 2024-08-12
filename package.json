@@ -1,10 +1,11 @@
 {
   "name": "etz",
-  "version": "v1.1.21",
+  "version": "v1.1.22",
   "private": true,
   "scripts": {
-    "dev": "parcel serve  --open --host localhost --port 5140",
-    "build": "rimraf build && parcel build --dist-dir build",
+    "prebuild": "mkdir -p dist && cp src/_redirects dist/_redirects && node build.js && cp src/robots.txt dist/robots.txt",
+    "dev": "node src/js/generateSitemap.js && parcel build --dist-dir dist && node server.js",
+    "build": "rimraf dist && yarn prebuild && parcel build --dist-dir dist && node src/js/generateSitemap.js && cp src/_redirects dist/_redirects && cp src/robots.txt dist/robots.txt",
     "prepare": "husky install",
     "check:tsc": "tsc --noemit -t es5 ./src/**/*.ts",
     "check:lint": "eslint ./src --ext .js,.ts",
@@ -20,13 +21,19 @@
   },
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "staticFiles": {
-    "staticPath": "src/assets"
+    "staticPath": "src/assets",
+    "staticOutDir": "."
   },
   "source": [
     "src/pages/index.html",
     "src/pages/employers.html",
     "src/pages/legal.html",
-    "src/pages/.well-known/change-password.html"
+    "src/pages/.well-known/change-password.html",
+    "src/pages/assets.html",
+    "src/pages/coin.html",
+    "src/pages/founders.html",
+    "src/pages/blog.html",
+    "src/pages/blogPost.html"
   ],
   "devDependencies": {
     "@alienlebarge/stylelint-config": "^3.1.6",
@@ -54,8 +61,12 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.45.1",
     "axios": "^0.27.2",
+    "express": "^4.19.2",
     "lil-gui": "^0.16.1",
+    "markdown-it": "^14.1.0",
+    "node-fetch": "^3.3.2",
     "smoothscroll-polyfill": "^0.4.4",
     "three": "^0.140.2",
     "universalsmoothscroll": "^5.1.2",

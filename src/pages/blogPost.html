@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html
+  lang="en-US"
+  xmlns:og="http://opengraphprotocol.org/schema/"
+  xmlns:fb="http://www.facebook.com/2008/fbml">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="stylesheet" href="../styles/index.css" />
+    <link rel="stylesheet" href="../styles/index.desktop.css" />
+    <link rel="stylesheet" href="../styles/index.mobile.css" />
+    <link rel="stylesheet" href="../styles/index.tablet.css" />
+    <link rel="stylesheet" href="../styles/blog-post.css" />
+    <title id="post-title">ETZ Blog Post</title>
+    <script src="../js/services/lottie.js" type="module"></script>
+    <script src="../js/version.js" type="module"></script>
+  </head>
+  <body>
+    <div id="loader-container">
+      <include src="components/loader/index.html"></include>
+    </div>
+    <script src="../js/notification.ts" type="module"></script>
+    <!-- Header menu -->
+    <include
+      src="components/header-menu/index.mobile.html"
+      locals="{}"></include>
+    <!-- Header section with placeholder for dynamic title -->
+    <include
+      src="components/header-section/index.html"
+      locals='{"title": "Loading title...", "description": ""}'></include>
+    <div class="featured-image-container">
+      <div id="post-image" class="blog-featured-image"></div>
+    </div>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-2 author-info">
+          <img
+            id="author-image"
+            src="../assets/avatar-default.png"
+            alt="Author Image"
+            class="img-fluid rounded-circle mb-2" />
+          <p class="author-name" id="author-name">Author</p>
+          <p class="publish-date" id="publish-date">Published On:</p>
+        </div>
+        <div class="col-md-10">
+          <article
+            id="post-content"
+            class="blog-post-content"
+            style="visibility: visible; display: block"></article>
+        </div>
+      </div>
+    </div>
+    <include src="components/footer/index.html" locals="{}"></include>
+    <script type="module" src="../js/links/links.ts" async></script>
+    <script type="module" src="../js/header-menu.ts" async></script>
+    <script type="module" src="../js/blogPost.js"></script>
+    <script>
+      // Hide the loader after 1 second and ensure content is displayed
+      setTimeout(() => {
+        const loaderContainer = document.getElementById("loader-container");
+        if (loaderContainer) {
+          loaderContainer.style.display = "none";
+        }
+        const blogList = document.getElementById("blog-list");
+        if (blogList) {
+          blogList.style.display = "block";
+          blogList.style.visibility = "visible";
+        }
+      }, 1000);
+    </script>
+  </body>
+</html>
