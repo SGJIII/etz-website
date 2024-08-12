@@ -137,7 +137,7 @@ export const populateTable = async (data, tableBody) => {
           ${coin.is_prime ? "Buy Now" : "Request"}
         </a>
       </td>
-      <a href="/${coin.coin_name}.html" class="row-link"></a>
+      <a href="/coin/${coin.coin_name}.html" class="row-link"></a>
     `;
     tableBody.appendChild(row);
   }

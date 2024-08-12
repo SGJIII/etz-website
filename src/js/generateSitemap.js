@@ -22,7 +22,7 @@ const generateSitemap = async () => {
         /%20/g,
         "%20"
       ); // Properly encode the coin name
-      return `<url><loc>${baseUrl}${coinNameEncoded}.html</loc></url>`;
+      return `<url><loc>${baseUrl}coin/${coinNameEncoded}.html</loc></url>`;
     });
 
     const staticUrls = [
