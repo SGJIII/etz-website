@@ -7,30 +7,36 @@
     </a>
     <div class="HeaderMenu_links">
       <div id="HeaderMenu_links">
+        <div class="HeaderMenu_link dropdown">
+          <button class="dropbtn">Who We Serve</button>
+          <div class="dropdown-content">
+            <a href="/" name-native-link>For Individuals</a>
+            <a href="./founders.html" name-native-link>For Founders</a>
+            <a href="./employers.html" name-native-link>For Employers</a>
+          </div>
+        </div>
         <div class="HeaderMenu_link">
-          <a href="./employers.html" name-native-link>
-            <span class="HeaderMenu_linkText__black">For Employers</span>
+          <a href="./assets.html" name-native-link>
+            <span class="HeaderMenu_linkText__black">Assets</span>
           </a>
         </div>
-
         <div class="HeaderMenu_link">
-          <a href="/" name-native-link>
-            <span class="HeaderMenu_linkText__black">For Individuals</span>
+          <a href="./blog.html" name-native-link>
+            <span class="HeaderMenu_linkText__black">Blog</span>
           </a>
         </div>
       </div>
-
       <div class="HeaderMenu_dashContainer">
         <div class="HeaderMenu_dash"></div>
       </div>
     </div>
     <span class="HeaderMenu_initial">
-      <a href="/#contact-us" name-link>
+      <!-- Removed Get Free Employer DEMO button -->
+      <a href="https://etz.app.link/Cr4ocrtxTKb" name-link>
         <span class="HeaderMenu_headerGetStarted Button Button__secondary">
           Open Individual IRA
         </span>
       </a>
-
       <!-- <span class="HeaderMenu_buttonLink">
         <div class="HeaderMenu_buttonIcon HeaderMenu_entryIconDark">
           <include src="assets/entry-dark.svg"> </include>
@@ -41,7 +47,6 @@
         Sign In
       </span> -->
     </span>
-
     <div class="HeaderMenu_burgerBlock">
       <input
         type="checkbox"
@@ -57,35 +62,49 @@
   </div>
   <div class="HeaderMenu_linksBlockMobile">
     <div class="HeaderMenu_linksMobile">
-      <a
-        class="HeaderMenu_linkMobile __mobile-accent-2"
-        href="./employers.html">
-        For Employers
-      </a>
-      <a class="HeaderMenu_linkMobile __mobile-accent-2" href="/">
-        For Individuals
-      </a>
+      <div class="dropdown">
+        <button class="dropbtn">Who We Serve</button>
+        <div class="dropdown-content">
+          <a class="HeaderMenu_linkMobile __mobile-accent-2" href="/"
+            >For Individuals</a
+          >
+          <a
+            class="HeaderMenu_linkMobile __mobile-accent-2"
+            href="./founders.html"
+            >For Founders</a
+          >
+          <a
+            class="HeaderMenu_linkMobile __mobile-accent-2"
+            href="./employers.html"
+            >For Employers</a
+          >
+        </div>
+      </div>
+      <a class="HeaderMenu_linkMobile __mobile-accent-2" href="./assets.html"
+        >Assets</a
+      >
+      <a class="HeaderMenu_linkMobile __mobile-accent-2" href="./blog.html"
+        >Blog</a
+      >
     </div>
     <div class="HeaderMenu_buttonsMobile">
-      <a href="https://calendly.com/thavidu" class="HeaderMenu_link">
-        <span
-          class="HeaderMenu_headerGetFreeDemo Button Button__whiteSecondary">
-          Get Free Employer DEMO
-        </span>
-      </a>
-      <a href="/#contact-us" name-link data-scroll="instant">
+      <!-- Removed Get Free Employer DEMO button -->
+      <a
+        href="https://etz.app.link/Cr4ocrtxTKb"
+        name-link
+        data-scroll="instant">
         <span class="HeaderMenu_headerGetStarted Button Button__secondary">
           Open Individual IRA
         </span>
       </a>
     </div>
   </div>
-
   <lottie-player
     src="/leaves/Leaves_web.json"
     class="Loader_leaves Loader_leaves__web HeaderMenu_overflow"
     background="transparent"
     speed="1"
     loop
-    autoplay></lottie-player>
+    autoplay>
+  </lottie-player>
 </header>
