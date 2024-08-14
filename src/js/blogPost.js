@@ -67,7 +67,7 @@ export const renderBlogPost = async () => {
   } else {
     document.getElementById(
       "post-image"
-    ).innerHTML = `<img src="../assets/blog-default.png" alt="Default Blog Image" class="img-fluid blog-featured-image">`;
+    ).innerHTML = `<img src="../blog-default.png" alt="Default Blog Image" class="img-fluid blog-featured-image">`;
   }
 
   // Set author info
