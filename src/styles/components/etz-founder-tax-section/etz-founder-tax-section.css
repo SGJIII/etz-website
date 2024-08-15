@@ -1,0 +1,277 @@
+.EtzMobileSection {
+  justify-content: center;
+  height: 100%;
+  padding-top: var(--section-margin-top);
+  --coin-position: 1px;
+}
+
+.EtzMobileSection_mobiles {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  transform: scale(clamp(0.5, calc(var(--vh) / 1038), 1));
+}
+
+.EtzMobileSection_img {
+  height: 1038px;
+}
+
+.EtzMobileSection_coin {
+  position: absolute;
+  z-index: 1;
+  --name: pulse;
+  --time-function: ease-in-out;
+}
+
+.EtzMobileSection_ada {
+  top: calc(613px + var(--coin-position));
+  left: -21px;
+  animation: var(--name) 4900ms var(--time-function) infinite;
+}
+
+.EtzMobileSection_avax {
+  top: calc(340px + var(--coin-position));
+  left: 687px;
+  animation: var(--name) 5200ms var(--time-function) infinite;
+}
+
+.EtzMobileSection_bnb {
+  top: calc(220px + var(--coin-position));
+  left: -35px;
+  animation: var(--name) 4800ms 40ms var(--time-function) infinite;
+}
+
+.EtzMobileSection_btc {
+  top: calc(280px + var(--coin-position));
+  left: 390px;
+  animation: var(--name) 4700ms 10ms var(--time-function) infinite;
+}
+
+.EtzMobileSection_eth {
+  right: 246px;
+  bottom: calc(312px - var(--coin-position));
+  animation: var(--name) 5000ms 20ms var(--time-function) infinite;
+}
+
+.EtzMobileSection_ftm {
+  top: calc(163px + var(--coin-position));
+  left: -120px;
+  animation: var(--name) 4500ms 10ms var(--time-function) infinite;
+}
+
+.EtzMobileSection_sol {
+  top: calc(70px + var(--coin-position));
+  right: 345px;
+  animation: var(--name) 4000ms 5ms var(--time-function) infinite;
+}
+
+.EtzMobileSection_usdc {
+  bottom: calc(101px - var(--coin-position));
+  left: 369px;
+  animation: var(--name) 5500ms var(--time-function) infinite;
+}
+
+.EtzMobileSection_block {
+  position: relative;
+  display: flex;
+  overflow: initial;
+  align-items: center;
+  align-self: center;
+  justify-content: flex-start;
+  height: 100%;
+  min-height: 600px;
+  justify-self: center;
+}
+
+.EtzMobileSection_title {
+  color: var(--secondary);
+}
+
+.EtzMobileSection_subTitle {
+  width: 315px;
+}
+
+.EtzMobileSection_textContainer {
+  padding: 30px 0;
+}
+
+.EtzMobileSection_text {
+  margin-bottom: 16px;
+}
+
+.EtzMobileSection_button {
+  display: flex;
+  align-items: center;
+  margin-top: 36px;
+}
+
+.EtzMobileSection_arrow {
+  padding: 1px 0 0 16px;
+}
+
+.EtzMobileSection_description {
+  min-width: 540px;
+  max-width: 540px;
+}
+
+.EtzMobileSection_pattern {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* New CSS for the Chart Section */
+.founder-tax-chart .chartContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.founder-tax-chart .chartTitle {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #2891ff; /* Change the color */
+  text-align: center;
+  margin-right: 340px; /* Centered above left bar */
+}
+
+.founder-tax-chart .chart {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.founder-tax-chart .bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 240px;
+  height: 600px; /* Set the height */
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 0 20px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.founder-tax-chart .bar.withETZ {
+  background: linear-gradient(135deg, #2891ff 0%, #226dff 100%);
+}
+
+.founder-tax-chart .bar.withoutETZ {
+  background: linear-gradient(135deg, #2891ff 0%, #226dff 100%);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.founder-tax-chart .barLabel {
+  background-color: #f5f5f5;
+  font-size: 1.1em;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.founder-tax-chart .barSegment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  width: 100%;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #fff;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.founder-tax-chart .bar.withoutETZ .barSegment.taxLosses {
+  color: #2891ff;
+  background: #fff; /* Set background to white */
+  flex-grow: 3;
+  border-top: 2px dashed #2891ff;
+  border-left: 2px dashed #2891ff;
+  border-right: 2px dashed #2891ff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.founder-tax-chart .bar.withETZ .barSegment.after25Years {
+  flex-grow: 4;
+}
+
+.founder-tax-chart .bar.withETZ .barSegment.afterExit {
+  flex-grow: 1;
+}
+
+.founder-tax-chart .bar.withoutETZ .barSegment.after25Years {
+  flex-grow: 2;
+}
+
+.founder-tax-chart .bar.withoutETZ .barSegment.afterExit {
+  flex-grow: 1;
+}
+
+.founder-tax-chart .barSegment:not(:last-child)::after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: #fff;
+  position: absolute;
+  bottom: 0;
+}
+
+.founder-tax-chart figcaption {
+  font-size: 1em;
+  color: #666;
+  margin-top: 20px;
+}
+
+.founderButton {
+  display: inline-block;
+  padding: 12px 24px;
+  font-size: 1em;
+  font-weight: bold;
+  color: #fff;
+  background-color: #2891ff;
+  border: none;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.Button__primary {
+  background-color: #2891ff;
+}
+
+.Button__primary:hover {
+  background-color: #226dff;
+}
+
+/* Media Queries for Mobile Adjustments */
+@media (max-width: 767px) {
+  .founder-tax-chart .chartTitle {
+    margin-right: 0; /* Remove right margin */
+    margin-bottom: 20px; /* Adjust bottom margin */
+    text-align: center;
+  }
+
+  .founder-tax-chart .bar {
+    height: 400px; /* Shorter height for mobile */
+  }
+
+  .founderButton {
+    display: block; /* Make the button a block element */
+    margin: 20px auto; /* Center the button horizontally */
+  }
+}
