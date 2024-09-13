@@ -13,6 +13,7 @@
   width: 100%;
   max-width: 1200px; /* Optional: Limit the width to avoid stretching */
   gap: 0px; /* Reduce gap to bring text and logos closer together */
+  margin-bottom: 80px;
 }
 
 .LogosSection_description {
@@ -46,4 +47,27 @@
 
 .logo:hover {
   transform: scale(1.1);
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .LogosSection_block {
+    flex-direction: column; /* Stack text and logos vertically on mobile */
+    gap: 20px; /* Add spacing between text and logos */
+  }
+
+  .LogosSection_text {
+    text-align: center; /* Center text on mobile */
+    max-width: 100%; /* Allow text to take the full width */
+    margin-bottom: 10px; /* Add some space below the text */
+  }
+
+  .LogosSection_logos {
+    gap: 30px; /* Reduce spacing between logos on mobile */
+    justify-content: center; /* Center logos on smaller screens */
+  }
+
+  .logo {
+    height: 25px; /* Scale down logos on mobile */
+  }
 }
