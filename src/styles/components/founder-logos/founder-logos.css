@@ -21,3 +21,20 @@
 .logo:hover {
   transform: scale(1.1); /* Optional hover effect */
 }
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .LogoBar {
+    margin-top: 80px;
+    margin-bottom: 30px;
+  }
+
+  .LogoBar_logos {
+    gap: 30px; /* Reduce spacing between logos on mobile */
+    justify-content: center; /* Center logos on smaller screens */
+  }
+
+  .logo {
+    max-height: 30px; /* Scale down logos on mobile */
+  }
+}
