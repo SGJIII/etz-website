@@ -1,0 +1,23 @@
+.LogoBar {
+  display: flex;
+  justify-content: center;
+  margin-top: 150px;
+  margin-bottom: 50px;
+}
+
+.LogoBar_logos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 90px; /* Adjust spacing between logos as needed */
+  flex-wrap: wrap; /* Allows wrapping on smaller screens */
+}
+
+.logo {
+  max-height: 40px; /* Adjust the size to fit the design */
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.1); /* Optional hover effect */
+}

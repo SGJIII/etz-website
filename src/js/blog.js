@@ -23,6 +23,7 @@ export const renderBlogPosts = async () => {
     return;
   }
 
+  // Render the list of blog posts
   blogList.innerHTML = posts
     .map(
       (post) =>
@@ -32,6 +33,23 @@ export const renderBlogPosts = async () => {
         </div>`
     )
     .join("");
+
+  // Automatically set the canonical URL for individual blog posts
+  const currentPath = window.location.pathname;
+  const postSlug = currentPath.split("/").pop().replace(".html", "");
+
+  // Find the matching post based on the current URL
+  const matchingPost = posts.find((post) => post.slug === postSlug);
+
+  if (matchingPost) {
+    // Create the canonical link element
+    const canonicalLink = document.createElement("link");
+    canonicalLink.rel = "canonical";
+    canonicalLink.href = `https://etzsoft.com/blog/${postSlug}.html`;
+
+    // Append the canonical link to the document head
+    document.head.appendChild(canonicalLink);
+  }
 };
 
 document.addEventListener("DOMContentLoaded", renderBlogPosts);

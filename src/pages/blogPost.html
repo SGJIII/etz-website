@@ -17,6 +17,23 @@
     <title id="post-title">ETZ Blog Post</title>
     <script src="../js/services/lottie.js" type="module"></script>
     <script src="../js/version.js" type="module"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script type="module">
+      if (process.env.BUILD_STATUS === "PRODUCTION") {
+        var script = document.createElement("script");
+        script.async = true;
+        script.src = "https://www.googletagmanager.com/gtag/js?id=G-JNSD1B12W2";
+        script.onload = function () {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag("js", new Date());
+          gtag("config", "G-JNSD1B12W2");
+        };
+        document.head.appendChild(script);
+      }
+    </script>
   </head>
   <body>
     <div id="loader-container">
