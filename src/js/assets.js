@@ -29,7 +29,7 @@ const fetchCoinbaseData = async (coinBase) => {
 
 const fetchCoinbaseHistoricalData = async (coinBase, start, end) => {
   const productId = `${coinBase}-USD`;
-  const url = `https://api.pro.coinbase.com/products/${productId}/candles?start=${start}&end=${end}&granularity=900`;
+  const url = `https://api.exchange.coinbase.com/products/${productId}/candles?start=${start}&end=${end}&granularity=900`;
   console.log(`Requesting historical data with URL: ${url}`);
   try {
     const response = await fetch(url);
