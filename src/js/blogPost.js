@@ -85,6 +85,12 @@ export const renderBlogPost = async () => {
     document.getElementById("author-image").src =
       "../assets/avatar-default.png";
   }
+
+  // Add canonical link to the blog post page
+  const canonicalLink = document.createElement("link");
+  canonicalLink.rel = "canonical";
+  canonicalLink.href = `https://etzsoft.com/blog/${slug}.html`;
+  document.head.appendChild(canonicalLink);
 };
 
 document.addEventListener("DOMContentLoaded", renderBlogPost);
