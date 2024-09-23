@@ -40,6 +40,8 @@ body {
   font-size: 32px;
   font-weight: bold;
   margin-top: 0;
+  text-align: left !important;
+  font-weight: 100 !important;
 }
 
 .author-info {
