@@ -1,54 +1,42 @@
-/* coins.css */
-@import "../styles/index.css";
-@import "../styles/index.desktop.css";
-@import "../styles/index.mobile.css";
-@import "../styles/index.tablet.css";
-
-.coin-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 20px;
+/* Custom styles for Markdown-rendered headings */
+.coin-content h1 {
+  font-size: 30px; /* Adjust the font size for <h1> */
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  font-family: "Rubik";
+  line-height: 1em;
 }
 
-.coin-list h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
+.coin-content h2 {
+  font-size: 26px !important; /* Adjust the font size for <h2> */
+  font-weight: bold;
+  margin-top: 1.25em;
+  margin-bottom: 0.5em;
+  font-family: "Rubik";
 }
 
-.coin-list table {
-  width: 100%;
-  max-width: 1200px;
-  border-collapse: collapse;
-  margin: 20px 0;
+.coin-content h3 {
+  font-size: 22px; /* Adjust the font size for <h3> */
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-family: "Rubik";
 }
 
-.coin-list table th,
-.coin-list table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
+.coin-content p {
+  font-size: 18px;
+  font-family: "Rubik";
+  line-height: 28px;
 }
 
-.coin-list table th {
-  background-color: #f2f2f2;
+.coin-content li {
+  font-size: 18px;
+  line-height: 28px;
+  font-family: "Rubik";
 }
 
-.coin-list table td {
-  text-align: center;
+.coin-content h4 {
+  font-size: 16px;
 }
-
-.coin-list a {
-  text-decoration: none;
-  color: #0070f3;
-  transition: color 0.3s;
-}
-
-.coin-list a:hover {
-  color: #005bb5;
-}
-
-.coin-list img {
-  display: block;
-  margin: 0 auto;
-}
+/* Add more styles for other heading tags if needed */

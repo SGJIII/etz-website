@@ -1,0 +1,57 @@
+name: QA - Deploy to AWS
+
+on:
+  push:
+    branches:
+      - deploy_to_qa
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    environment: ${{vars.QA_ENV_NAME}}
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{vars.DEPLOY_BRANCH}}
+    - name: Create env file
+      run: |
+        touch .env
+        echo API_URL=${{vars.API_URL}} >> .env
+        echo BUILD_STATUS=${{vars.BUILD_STATUS}} >> .env
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 14.17.0
+        cache: 'yarn'
+    - run: yarn install
+    - run: yarn check:tsc
+    - run: yarn check:lint
+    - run: yarn build
+    - uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+        aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+        aws-region: ${{vars.AWS_REGION}}
+    - run: aws s3 sync ./dist s3://${{vars.AWS_S3_BUCKET}}/ --delete
+    - run: aws cloudfront create-invalidation --distribution-id ${{vars.AWS_CLOUDFRONT_DISTR}} --paths "/*"
+
+    - name: Get app version
+      id: getting_app_version
+      uses: ActionsTools/read-json-action@main
+      with:
+        file_path: "package.json"
+        prop_path: "version"
+
+    - name: Send complete message to Slack channel
+      uses: slackapi/slack-github-action@v1.26.0
+      with:
+        payload: |
+          {
+            "channel": "#builds",
+            "username": "Server Bulder bot",
+            "text": "Landing ${{vars.QA_ENV_NAME}} frontend updated to ${{steps.getting_app_version.outputs.value}}: ${{vars.APP_URL}}",
+            "icon_emoji": ":floppy_disk:"
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}

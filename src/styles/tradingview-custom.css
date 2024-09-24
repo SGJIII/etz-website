@@ -1,0 +1,95 @@
+/* Center the TradingView widget within its container */
+.tradingview-widget-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 0;
+}
+
+/* Ensure the widget takes up the full width and height of the container */
+.tradingview-widget-container__widget {
+  width: 900 !important;
+  height: 400 !important;
+}
+
+/* Additional styles for the copyright text */
+.tradingview-widget-copyright {
+  font-size: 13px !important;
+  line-height: 32px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Trebuchet MS", Roboto, Ubuntu,
+    sans-serif !important;
+  color: #b2b5be !important;
+}
+
+.tradingview-widget-copyright .blue-text {
+  color: #2962ff !important;
+}
+
+.tradingview-widget-copyright a {
+  text-decoration: none !important;
+  color: #b2b5be !important;
+}
+
+.tradingview-widget-copyright a:visited {
+  color: #b2b5be !important;
+}
+
+.tradingview-widget-copyright a:hover .blue-text {
+  color: #1e53e5 !important;
+}
+
+.tradingview-widget-copyright a:active .blue-text {
+  color: #1848cc !important;
+}
+
+.tradingview-widget-copyright a:visited .blue-text {
+  color: #2962ff !important;
+}
+
+.coin-details {
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 20px;
+}
+
+.coin-details img {
+  display: block;
+  margin: 20px auto;
+}
+
+#tradingview-embed-container {
+  position: relative;
+  margin-top: -450px; /* Adjust this value as needed to overlap with the blue section */
+  z-index: 10;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 1000px; /* Ensure it has margins on the sides */
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 550px; /* Adjust this value as needed */
+}
+
+#tradingview-embed {
+  height: -webkit-fill-available;
+  width: -webkit-fill-available;
+}
+
+.tradingview-widget-container {
+  width: 100%;
+  height: 100%;
+  max-width: 960px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.HeaderSection_main {
+  height: 50vh !important;
+}

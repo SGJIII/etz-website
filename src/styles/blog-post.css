@@ -1,0 +1,198 @@
+/* src/styles/blog-post.css */
+
+/* Importing necessary base styles */
+@import url("./fonts/index.css");
+@import url("./theme/typography.css");
+@import url("./theme/color-scheme.css");
+
+/* General body styles for the blog post page */
+body {
+  font-family: Rubik, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+  overflow: auto; /* Ensure body is scrollable */
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.HeaderSection {
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.HeaderSection_menu {
+  z-index: 10; /* Ensure header menu is above other content */
+  position: relative;
+}
+
+.HeaderSection_main {
+  z-index: 0;
+}
+
+.HeaderSection_title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-top: 0;
+  text-align: left !important;
+  font-weight: 100 !important;
+}
+
+.author-info {
+  text-align: center;
+}
+
+.author-info img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.author-name {
+  font-weight: bold;
+}
+
+.publish-date {
+  color: #888;
+}
+
+.blog-post-content {
+  background-color: #fff;
+  padding: 40px;
+  margin: 20px 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: block;
+  visibility: visible;
+}
+
+.blog-post-content h1 {
+  font-size: 30px;
+  font-weight: bold;
+  margin-top: 0;
+}
+
+.blog-post-content h2 {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.blog-post-content h3 {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.blog-post-content p {
+  font-size: 18px;
+  color: #333;
+  line-height: 1.6;
+}
+
+.blog-post-content ul,
+.blog-post-content ol {
+  margin-left: 20px;
+  padding-left: 20px;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.blog-featured-image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.featured-image-container {
+  position: relative;
+  top: -140px; /* Move the image container up */
+  z-index: 5; /* Ensure it's above the header */
+  background: white; /* Ensure background color for the container */
+  padding: 20px; /* Add padding around the image */
+  border-radius: 10px; /* Add rounded corners if desired */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  max-width: 1200px; /* Ensure the container doesn't get too wide */
+  margin: 0 auto; /* Center the container */
+}
+
+.featured-image-wrapper {
+  width: 100%;
+  padding-top: 33.33%; /* 6:2 aspect ratio */
+  position: relative;
+}
+
+.featured-image-wrapper img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.HeaderSection {
+  position: relative;
+  text-align: center;
+  padding-bottom: 50px;
+  height: 80vh !important;
+}
+
+.HeaderSection_image {
+  position: relative;
+  top: -50px;
+}
+
+.author-info {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.author-info img {
+  display: block;
+  margin: 0 auto;
+}
+
+.blog-post-content {
+  margin-top: 20px;
+}
+
+.HeaderSection_title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-top: 20px;
+  height: 20vh !important;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .blog-container {
+    padding: 10px;
+  }
+
+  .blog-post-content {
+    padding: 20px;
+  }
+
+  .blog-post-content h1,
+  .blog-post-content h2,
+  .blog-post-content h3 {
+    font-size: 20px;
+  }
+
+  .blog-post-content p,
+  .blog-post-content ul,
+  .blog-post-content ol {
+    font-size: 16px;
+  }
+
+  .featured-image-container {
+    width: 100%;
+  }
+}

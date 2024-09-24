@@ -6,4 +6,4 @@
 build
 coverage
 .DS_Store
-.env.staging
+/venv

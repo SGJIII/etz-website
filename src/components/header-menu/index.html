@@ -1,7 +1,7 @@
 <!--src/components/header-menu/index.html-->
 <header class="HeaderMenu_menu __sidePadding">
   <div class="HeaderMenu_menuContainer">
-    <a href="#header" name-link>
+    <a href="/" name-link>
       <span class="HeaderMenu_logoDark">
         <img src="../assets/logo-dark.svg" />
       </span>
@@ -11,15 +11,22 @@
     </a>
     <div class="HeaderMenu_links">
       <div id="HeaderMenu_links">
+        <div class="HeaderMenu_link dropdown">
+          <button class="dropbtn">Who We Serve</button>
+          <div class="dropdown-content">
+            <a href="/" name-native-link>For Individuals</a>
+            <a href="./founders.html" name-native-link>For Founders</a>
+            <a href="./employers.html" name-native-link>For Employers</a>
+          </div>
+        </div>
         <div class="HeaderMenu_link">
-          <a href="./employers.html" name-native-link>
-            <span class="HeaderMenu_linkText__black">For Employers</span>
+          <a href="./assets.html" name-native-link>
+            <span class="HeaderMenu_linkText__black">Assets</span>
           </a>
         </div>
-
         <div class="HeaderMenu_link">
-          <a href="/" name-native-link>
-            <span class="HeaderMenu_linkText__black">For Individuals</span>
+          <a href="./blog.html" name-native-link>
+            <span class="HeaderMenu_linkText__black">Blog</span>
           </a>
         </div>
 
@@ -30,20 +37,13 @@
           </a>
         </div>
       </div>
-
       <div class="HeaderMenu_dashContainer">
         <div class="HeaderMenu_dash"></div>
       </div>
     </div>
     <span class="HeaderMenu_initial">
-      <a href="https://calendly.com/thavidu" target="_blank">
-        <span
-          class="HeaderMenu_headerGetFreeDemo Button Button__whiteSecondary"
-          name-button-demo>
-          Get Free Employer DEMO
-        </span>
-      </a>
-      <a href="/#contact-us" name-link>
+      <!-- Removed Get Free Employer DEMO button -->
+      <a href="https://etz.app.link/Cr4ocrtxTKb" name-link>
         <span
           class="HeaderMenu_headerGetStarted Button Button__whitePrimary"
           name-button-join>

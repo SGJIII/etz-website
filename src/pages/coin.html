@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html
-  lang="en-US"
-  xmlns:og="http://opengraphprotocol.org/schema/"
-  xmlns:fb="http://www.facebook.com/2008/fbml">
+<html lang="en-US">
   <head>
     <script src="../js/services/lottie.js" type="module"></script>
+    <script type="module" src="../js/coin.js"></script>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta
@@ -13,14 +11,14 @@
     <link rel="stylesheet" href="../styles/index.css" />
     <link rel="stylesheet" href="../styles/index.desktop.css" />
     <link rel="stylesheet" href="../styles/index.mobile.css" />
-    <link rel="stylesheet" href="../styles/index.tablet.css" />
-    <title>ETZ</title>
+    <link rel="stylesheet" href="../styles/coins.css" />
+    <link rel="stylesheet" href="../styles/tradingview-custom.css" />
+    <title id="coin-title">Coin Details</title>
     <style id="antiClickjack">
       body {
         display: none !important;
       }
     </style>
-
     <script type="text/javascript">
       if (self === top) {
         var antiClickjack = document.getElementById("antiClickjack");
@@ -49,11 +47,12 @@
       rel="apple-touch-icon"
       sizes="256x256"
       href="https://etzsoft.com/favicon-256.png" />
-
-    <meta property="og:title" content="ETZ" />
-    <meta property="og:description" content="" />
+    <meta property="og:title" content="{{coin_title}}" />
+    <meta property="og:description" content="{{coin_description}}" />
     <meta property="og:site_name" content="ETZ" />
-    <meta property="og:url" content="https://etzsoft.com" />
+    <meta
+      property="og:url"
+      content="https://etzsoft.com/coin/{{coin_name}}.html" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:image" content="https://etzsoft.com/frame.png" />
@@ -63,10 +62,9 @@
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:height" content="504" />
     <meta property="og:image:width" content="968" />
-    <meta name="twitter:title" content="ETZ" />
+    <meta name="twitter:title" content="{{coin_title}}" />
     <meta name="twitter:image" content="https://etzsoft.com/frame.png" />
     <meta name="twitter:card" content="summary_large_image" />
-
     <script src="../js/version.js" type="module"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script type="module">
@@ -74,7 +72,6 @@
         var script = document.createElement("script");
         script.async = true;
         script.src = "https://www.googletagmanager.com/gtag/js?id=G-JNSD1B12W2";
-
         script.onload = function () {
           window.dataLayer = window.dataLayer || [];
           function gtag() {
@@ -87,52 +84,46 @@
       }
     </script>
   </head>
-  <body style="overflow: hidden">
-    <include src="components/loader/index.html"></include>
-    <video
-      id="video"
-      playsinline
-      muted
-      loop
-      autoplay
-      width="750"
-      height="1624"
-      src="../assets/Mobile-1-3.mp4"
-      style="display: none"></video>
-    <video
-      id="video2"
-      playsinline
-      muted
-      loop
-      autoplay
-      width="750"
-      height="1624"
-      src="../assets/Buying_Mobile-4.mp4"
-      style="display: none"></video>
+  <body>
+    <div id="loader-container">
+      <include src="components/loader/index.html"></include>
+    </div>
     <canvas class="webgl" name-mobile-model></canvas>
-
     <script src="../js/notification.ts" type="module"></script>
     <include
       src="components/header-menu/index.mobile.html"
       locals="{}"></include>
     <include
       src="components/header-section/index.html"
-      locals='{
-      "title":"Buy and Sell digital assets in your retirement account 24/7",
-      "description": "ETZ provides a white glove service to help you with your digital assets investing needs. Have an IRA or 401k you’d like to rollover? We can help with that. ETZ uses a regulated, state chartered trust company to hold the self directed IRAs and custody of assets."
-    }'></include>
-    <include src="components/benefits-section/index.html"></include>
-    <include src="components/logos/index.html"></include>
-    <include src="components/for-employers-section/index.html"></include>
-
-    <include src="components/etz-mobile-section/index.html"></include>
-    <include src="components/supported-crypto-section/index.html"></include>
-    <include src="components/faq-section/index.html"></include>
-    <include src="components/contact-us-section/individual.html"></include>
+      locals='{"title": "{{coin_title}}", "description": ""}'></include>
+    <div id="tradingview-embed-container">
+      <div id="tradingview-embed"></div>
+    </div>
+    <article
+      id="content"
+      class="__section __sidePadding ContentSection"
+      style="height: auto">
+      <div class="coin-details">
+        <div id="coin-content">{{coin_content}}</div>
+        <!-- Server-side rendered content will be injected here -->
+      </div>
+    </article>
     <include src="components/footer/index.html" locals="{}"></include>
-
     <script type="module">
-      function setupSizePage() {
+      import { renderCoinPage } from "../js/coin.js";
+
+      document.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => {
+          const loaderContainer = document.getElementById("loader-container");
+          if (loaderContainer) {
+            loaderContainer.style.display = "none";
+          }
+          renderCoinPage();
+        }, 3000);
+      });
+    </script>
+    <script type="module">
+      function setUpSizePage() {
         const vw = Math.max(
           document.documentElement.clientWidth || 0,
           window.innerWidth || 0
@@ -141,16 +132,15 @@
           document.documentElement.clientHeight || 0,
           window.innerHeight || 0
         );
-        document.documentElement.style.setProperty("--vw", `${vw}`);
-        document.documentElement.style.setProperty("--vh", `${vh}`);
+        document.documentElement.style.setProperty("--vw", `${vw}px`);
+        document.documentElement.style.setProperty("--vh", `${vh}px`);
         document.documentElement.style.setProperty("--vh-px", `${vh}px`);
       }
-      setupSizePage();
-      window.addEventListener("resize", setupSizePage);
+      setUpSizePage();
+      window.addEventListener("resize", setUpSizePage);
     </script>
     <script type="module" src="../js/links/links.ts" async></script>
     <script type="module" src="../js/header-menu.ts" async></script>
-    <script type="module" src="../js/index.ts"></script>
-    <script type="module" src="../js/three.js"></script>
+    <script type="module" src="../js/index.ts" async></script>
   </body>
 </html>

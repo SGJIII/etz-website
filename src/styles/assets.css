@@ -1,0 +1,294 @@
+/* src/styles/assets.css */
+
+/* Existing styles */
+.HeaderSection {
+  height: 80vh !important;
+}
+
+.HeaderSection_title {
+  height: 20vh !important;
+}
+
+/* Make all images circular */
+#assets-table img {
+  border-radius: 50%;
+}
+
+.coin-list {
+  padding-top: 10px;
+}
+
+.coin-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  vertical-align: middle;
+}
+
+.coin-logo {
+  height: 35px; /* Adjust this value as needed */
+  width: 35px; /* Adjust this value as needed */
+  margin-right: 10px;
+}
+
+.coin-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.coin-name {
+  font-weight: 450;
+  font-size: larger;
+}
+
+.coin-base {
+  color: #888;
+}
+
+.buy-button {
+  display: inline-block;
+  padding: 10px 15px; /* Adjusted padding */
+  background: linear-gradient(45deg, #226dff, #2891ff);
+  color: white;
+  font-family: "Rubik", sans-serif;
+  font-weight: 600;
+  border-radius: 50px;
+  text-decoration: none;
+  white-space: nowrap; /* Prevent text wrapping */
+  z-index: 3; /* Ensure the buy button is on top */
+  position: relative; /* Ensure z-index is applied */
+}
+
+.buy-button:hover {
+  display: inline-block;
+  padding: 10px 15px; /* Adjusted padding */
+  background: linear-gradient(45deg, #0357ff, #226dff);
+  color: white;
+  font-family: "Rubik", sans-serif;
+  font-weight: 600;
+  border-radius: 50px;
+  text-decoration: none;
+  white-space: nowrap; /* Prevent text wrapping */
+  z-index: 3; /* Ensure the buy button is on top */
+  position: relative; /* Ensure z-index is applied */
+}
+
+#assets-table {
+  border-collapse: collapse; /* Ensure no gaps between cells */
+  width: 100%;
+}
+
+#assets-table th,
+#assets-table td {
+  padding: 15px 20px;
+  vertical-align: middle;
+  border: none; /* Remove borders */
+}
+
+#assets-table th.name-column {
+  text-align: left;
+  width: 50%;
+  color: gray;
+  font-size: large;
+  width: max-content;
+  padding-right: 0;
+}
+
+#assets-table td.name-column {
+  text-align: left;
+  width: 50%;
+  width: max-content;
+  padding-right: 0;
+  min-width: 250px;
+}
+
+#assets-table th.price-column {
+  text-align: right;
+  width: 25%;
+  color: gray;
+  font-size: large;
+  padding-right: 100px;
+  padding-left: 100px;
+}
+
+#assets-table td.price-column {
+  text-align: right;
+  width: 25%;
+  padding-right: 100px;
+  padding-left: 100px;
+  font-size: large;
+}
+
+#assets-table th.buy-column {
+  text-align: center;
+  width: 150px; /* Set a fixed width */
+  color: gray;
+  font-size: large;
+}
+
+#assets-table td.buy-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px; /* Set a fixed width */
+}
+
+#assets-table th.change-column {
+  text-align: right;
+  width: 25%;
+  color: gray;
+  font-size: large;
+  padding-right: 150px;
+  padding-left: 100px;
+}
+
+#assets-table td.change-column {
+  text-align: right;
+  padding-right: 150px;
+}
+
+#assets-table tr:hover {
+  background-color: #f7f7f7;
+}
+
+#assets-table td:hover {
+  background-color: #f7f7f7;
+}
+
+/* Ensure the whole row is clickable except for the Buy button */
+#assets-table tr {
+  position: relative;
+}
+
+#assets-table a.row-link {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+#assets-table td {
+  position: relative;
+}
+
+#assets-table td.buy-column a.row-link {
+  z-index: -1; /* Ensure buy button stays on top */
+}
+
+/* Styles for positive and negative changes */
+.positive-change::before {
+  content: "▲";
+  color: green;
+  margin-right: 5px;
+}
+
+.positive-change {
+  color: green;
+}
+
+.negative-change::before {
+  content: "▼";
+  color: red;
+  margin-right: 5px;
+}
+
+.negative-change {
+  color: red;
+}
+
+.no-change {
+  color: gray;
+}
+
+/* New styles for the table wrapper */
+.table-wrapper {
+  position: relative;
+  top: -250px; /* Adjust this value as needed to move the table up */
+  margin: 0 auto; /* Center the table wrapper */
+  background: white; /* Ensure background color for the table wrapper */
+  padding: 20px; /* Add padding around the table */
+  border-radius: 10px; /* Add rounded corners if desired */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  width: 77%; /* Adjust width as needed */
+  max-width: 1200px; /* Ensure the table doesn't get too wide */
+  z-index: 10; /* Ensure the table wrapper is on top of other elements */
+}
+
+#content {
+  min-width: auto !important;
+  overflow-x: scroll;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .HeaderSection {
+    height: 60vh !important;
+  }
+
+  .HeaderSection_title {
+    height: 15vh !important;
+  }
+
+  .table-wrapper {
+    width: 100%; /* Full width for mobile */
+    padding: 10px; /* Reduce padding for mobile */
+    overflow-x: auto; /* Allow horizontal scrolling */
+  }
+
+  #assets-table {
+    display: block;
+    width: 100%; /* Allow the table to expand */
+  }
+
+  #assets-table th,
+  #assets-table td {
+    padding: 10px 15px; /* Reduce padding for mobile */
+    white-space: normal; /* Prevent text wrapping */
+  }
+
+  #assets-table th,
+  #assets-table td {
+    min-width: 150px; /* Minimum width for columns */
+  }
+
+  #assets-table th.name-column,
+  #assets-table td.name-column {
+    position: sticky;
+    left: 0;
+    background: white;
+    z-index: 5;
+  }
+
+  #assets-table th.name-column {
+    width: 150px; /* Adjust as needed */
+  }
+
+  #assets-table td.name-column {
+    width: 150px; /* Adjust as needed */
+    padding-right: 0px; /* Add padding to prevent overlap */
+  }
+
+  #assets-table td.price-column {
+    padding-left: 572px;
+  }
+
+  .coin-logo {
+    height: 25px; /* Reduce logo size for mobile */
+    width: 25px; /* Reduce logo size for mobile */
+    margin-right: 5px; /* Reduce margin for mobile */
+  }
+
+  .coin-name {
+    font-size: medium; /* Reduce font size for mobile */
+  }
+
+  .buy-button {
+    padding: 5px 10px; /* Reduce padding for mobile */
+    font-size: 14px; /* Reduce font size for mobile */
+  }
+}

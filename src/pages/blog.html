@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html
+  lang="en-US"
+  xmlns:og="http://opengraphprotocol.org/schema/"
+  xmlns:fb="http://www.facebook.com/2008/fbml">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="stylesheet" href="../styles/index.css" />
+    <link rel="stylesheet" href="../styles/index.desktop.css" />
+    <link rel="stylesheet" href="../styles/index.mobile.css" />
+    <link rel="stylesheet" href="../styles/index.tablet.css" />
+    <link rel="stylesheet" href="../styles/blog.css" />
+    <title>ETZ Blog</title>
+    <script src="../js/services/lottie.js" type="module"></script>
+    <script src="../js/version.js" type="module"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script type="module">
+      if (process.env.BUILD_STATUS === "PRODUCTION") {
+        var script = document.createElement("script");
+        script.async = true;
+        script.src = "https://www.googletagmanager.com/gtag/js?id=G-JNSD1B12W2";
+        script.onload = function () {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag("js", new Date());
+          gtag("config", "G-JNSD1B12W2");
+        };
+        document.head.appendChild(script);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="loader-container">
+      <include src="components/loader/index.html"></include>
+    </div>
+    <script src="../js/notification.ts" type="module"></script>
+    <include
+      src="components/header-menu/index.mobile.html"
+      locals="{}"></include>
+    <include
+      src="components/header-section/index.html"
+      locals='{"title": "ETZ - Blog", "description": ""}'></include>
+    <article class="blog-container">
+      <include src="components/blog-list/index.html"></include>
+    </article>
+    <include src="components/footer/index.html" locals="{}"></include>
+    <script type="module" src="../js/links/links.ts" async></script>
+    <script type="module" src="../js/header-menu.ts" async></script>
+    <script type="module" src="../js/blog.js"></script>
+    <script>
+      setTimeout(() => {
+        const loaderContainer = document.getElementById("loader-container");
+        if (loaderContainer) {
+          loaderContainer.style.display = "none";
+        }
+        const blogList = document.getElementById("blog-list");
+        if (blogList) {
+          blogList.style.display = "block";
+          blogList.style.visibility = "visible";
+        }
+      }, 1000);
+    </script>
+  </body>
+</html>
